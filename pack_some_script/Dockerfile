@@ -10,6 +10,7 @@ RUN set -ex \
 # 创建工作目录
 RUN mkdir /logs \
         && mkdir /pss \
+        && cd /pss \
         && git init \
         && git remote add -f origin https://github.com/Aaron-lv/someDockerfile \
         && git config core.sparsecheckout true \
