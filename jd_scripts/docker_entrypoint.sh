@@ -15,6 +15,10 @@ git -C /scripts pull
 echo "npm install 安装最新依赖"
 npm install --prefix /scripts
 
+echo "替换执行文件"
+cp /jds/jd_scripts/* /scripts/docker/
+echo "替换完成"
+
 echo "------------------------------------------------执行定时任务任务shell脚本------------------------------------------------"
 sh -x /scripts/docker/default_task.sh
 echo "--------------------------------------------------默认定时任务执行完成---------------------------------------------------"
