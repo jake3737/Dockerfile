@@ -30,4 +30,14 @@ echo -n "1 7 13 1 * node /scripts/jd_super_coupon.js |ts >> /scripts/logs/jd_sup
 wget -O /scripts/jd_gyec.js https://raw.githubusercontent.com/shylocks/Loon/main/jd_gyec.js
 echo -e >> /scripts/docker/merged_list_file.sh
 echo "#工业品爱消除" >> /scripts/docker/merged_list_file.sh
-echo "30 * * * * node /scripts/jd_gyec.js |ts >> /scripts/logs/jd_gyec.log 2>&1" >> /scripts/docker/merged_list_file.sh
+echo -n "30 * * * * node /scripts/jd_gyec.js |ts >> /scripts/logs/jd_gyec.log 2>&1" >> /scripts/docker/merged_list_file.sh
+#京喜财富岛
+wget -O /scripts/jx_cfd.js https://raw.githubusercontent.com/moposmall/Script/main/Me/jx_cfd.js
+echo -e >> /scripts/docker/merged_list_file.sh
+echo "#京喜财富岛" >> /scripts/docker/merged_list_file.sh
+echo -n "0 * * * * node /scripts/jx_cfd.js |ts >> /scripts/logs/jx_cfd.log 2>&1" >> /scripts/docker/merged_list_file.sh
+#京喜财富岛提现
+wget -O /scripts/jx_cfdtx.js https://raw.githubusercontent.com/Aaron-lv/JavaScript/master/Task/jx_cfdtx.js
+echo -e >> /scripts/docker/merged_list_file.sh
+echo "#京喜财富岛提现" >> /scripts/docker/merged_list_file.sh
+echo "0 0 * * * node /scripts/jx_cfdtx.js |ts >> /scripts/logs/jx_cfdtx.log 2>&1" >> /scripts/docker/merged_list_file.sh
