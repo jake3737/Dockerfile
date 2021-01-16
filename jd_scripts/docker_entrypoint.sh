@@ -19,7 +19,7 @@ echo "更新jds仓库文件"
 git -C /jds reset --hard
 git -C /jds pull origin master
 echo "替换执行文件"
-cp -R /jds/jd_scripts/* /scripts/docker/
+ls /jds/jd_scripts/ |grep -v shell_script_mod.sh |xargs -i cp -R /jds/jd_scripts/{} /scripts/docker/
 echo "替换完成"
 
 echo "------------------------------------------------执行定时任务任务shell脚本------------------------------------------------"
