@@ -35,4 +35,4 @@ echo "30 * * * * node /scripts/jd_gyec.js |ts >> /scripts/logs/jd_gyec.log 2>&1"
 
 
 #增加空行占位
-echo -n "" >> /scripts/docker/merged_list_file.sh
+#echo -n "" >> /scripts/docker/merged_list_file.sh
