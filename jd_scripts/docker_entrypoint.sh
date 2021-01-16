@@ -6,7 +6,6 @@ if [ $1 ]; then
     run_cmd=$1
 fi
 
-echo -e "\n\n"
 echo "设定远程仓库地址..."
 cd /scripts
 git remote set-url origin $REPO_URL
@@ -34,3 +33,4 @@ if [ $run_cmd ]; then
 else
     echo "默认定时任务执行结束。"
 fi
+echo -e "\n\n"
