@@ -41,6 +41,8 @@ if [ $(grep -c "docker_entrypoint.sh" $mergedListFile) -eq '0' ]; then
     echo -e >>$mergedListFile
     echo "#脚本追加默认定时任务" >>$mergedListFile
     echo "52 */1 * * * docker_entrypoint.sh >> /scripts/logs/default_task.log 2>&1" >>$mergedListFile
+else
+    echo "合并后的定时任务文件，已包含必须的默认定时任务，跳过执行..."
 fi
 
 echo "第4步判断是否配置了随即延迟参数..."
