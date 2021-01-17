@@ -64,6 +64,7 @@ function inithotsoon() {
     echo hotsoon.js >>/hotsoon/.git/info/sparse-checkout
     echo sendNotify.js >>/hotsoon/.git/info/sparse-checkout
     git pull origin master
+    mv /hotsoon/package1.json /hotsoon/package.json
     npm install
 }
 
@@ -196,6 +197,7 @@ else
         echo "更新hotsoon脚本相关文件"
         git -C /hotsoon reset --hard
         git -C /hotsoon pull origin master
+        mv /hotsoon/package1.json /hotsoon/package.json
         npm install --prefix /hotsoon
     fi
     if [ 0"$HOTSOON_CRON" = "0" ]; then
