@@ -1,6 +1,13 @@
 #!/bin/sh
 
 
+## 直播间红包雨
+echo -e >> /scripts/docker/merged_list_file.sh
+echo "#更新直播间红包雨" >> /scripts/docker/merged_list_file.sh
+echo "58,59 18-20/1 * * * wget -O /scripts/jd_live_redrain2.js https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain2.js " >> /scripts/docker/merged_list_file.sh
+echo "#直播间红包雨" >> /scripts/docker/merged_list_file.sh
+echo -n "0,1 19-21/1 * * * node /scripts/jd_live_redrain2.js |ts >> /scripts/logs/jd_live_redrain2.log 2>&1" >> /scripts/docker/merged_list_file.sh
+
 ## 盲盒抽京豆
 wget -O /scripts/jd_mh.js https://raw.githubusercontent.com/shylocks/Loon/main/jd_mh.js
 echo -e >> /scripts/docker/merged_list_file.sh
