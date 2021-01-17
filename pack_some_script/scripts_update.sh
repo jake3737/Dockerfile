@@ -60,7 +60,7 @@ function inithotsoon() {
     git init
     git remote add -f origin https://github.com/ZhiYi-N/script
     git config core.sparsecheckout true
-    echo package.json >>/hotsoon/.git/info/sparse-checkout
+    echo package1.json >>/hotsoon/.git/info/sparse-checkout
     echo hotsoon.js >>/hotsoon/.git/info/sparse-checkout
     echo sendNotify.js >>/hotsoon/.git/info/sparse-checkout
     git pull origin master
