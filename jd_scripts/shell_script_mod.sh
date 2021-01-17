@@ -41,3 +41,8 @@ wget -O /scripts/jx_cfdtx.js https://raw.githubusercontent.com/Aaron-lv/JavaScri
 echo -e >> /scripts/docker/merged_list_file.sh
 echo "#京喜财富岛提现" >> /scripts/docker/merged_list_file.sh
 echo "0 0 * * * node /scripts/jx_cfdtx.js |ts >> /scripts/logs/jx_cfdtx.log 2>&1" >> /scripts/docker/merged_list_file.sh
+
+
+
+#替换工业品爱消除助力码
+sed -i "s/840266@2583822@2585219@2586018@1556311@2583822@2585256@2586023@2728968/754344@2695073@654824@1398507@2274010/g" /scripts/jd_gyec.js
