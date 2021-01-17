@@ -64,7 +64,7 @@ else
         wget -O /scripts/docker/shell_script_mod.sh $CUSTOM_SHELL_FILE
         echo "下载完成，开始执行..."
         echo "" >>$mergedListFile
-        echo -n "#远程自定义shell脚本追加定时任务" >>$mergedListFile
+        echo -n "##############远程脚本##############" >>$mergedListFile
         sh -x /scripts/docker/shell_script_mod.sh
         echo "自定义远程shell脚本下载并执行结束。"
     else
@@ -73,7 +73,7 @@ else
         else
             echo "docker挂载的自定shell脚本，开始执行..."
             echo "" >>$mergedListFile
-            echo -n "#docker挂载自定义shell脚本追加定时任务" >>$mergedListFile
+            echo -n "##############挂载脚本##############" >>$mergedListFile
             sh -x $CUSTOM_SHELL_FILE
             echo "docker挂载的自定shell脚本，执行结束。"
         fi
