@@ -1,7 +1,7 @@
 #!/bin/sh
 
 
-if [ $CRZAY_JOY_COIN_ENABLE = "Y" ]; then
+if [ $CRZAY_JOY_COIN_ENABLE = "N" ]; then
    echo "配置启用jd_crazy_joy_coin，杀掉jd_crazy_joy_coin任务，并重启"
    eval $(ps -ef | grep "jd_crazy" | awk '{print "kill "$1}')
    echo '' >/scripts/logs/jd_crazy_joy_coin.log
