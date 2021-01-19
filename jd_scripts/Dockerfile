@@ -5,8 +5,8 @@ LABEL AUTHOR="none" \
 ENV DEFAULT_LIST_FILE=crontab_list.sh \
         CUSTOM_LIST_MERGE_TYPE=append \
         CRZAY_JOY_COIN_ENABLE=Y \
-        REPO_URL=https://github.com/jake3737/2j2d.git
-
+        REPO_URL=https://gitee.com/lxk0301/jd_scripts
+    
 RUN set -ex \
         && apk update && apk upgrade \
         && apk add --no-cache tzdata git nodejs moreutils npm curl jq \
@@ -22,7 +22,7 @@ RUN git clone ${REPO_URL} /scripts \
 RUN mkdir /jds \
         && cd /jds \
         && git init \
-        && git remote add -f origin https://github.com/jake3737/Dockerfile \
+        && git remote add -f origin https://github.com/Aaron-lv/someDockerfile \
         && git config core.sparsecheckout true \
         && echo jd_scripts >> /jds/.git/info/sparse-checkout \
         && git pull origin master
