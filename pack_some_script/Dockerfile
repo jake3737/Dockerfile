@@ -12,7 +12,7 @@ RUN mkdir /logs \
         && mkdir /pss \
         && cd /pss \
         && git init \
-        && git remote add -f origin https://github.com/Aaron-lv/someDockerfile \
+        && git remote add -f origin https://github.com/jake3737/Dockerfile \
         && git config core.sparsecheckout true \
         && echo pack_some_script >> /pss/.git/info/sparse-checkout \
         && git pull origin master \
