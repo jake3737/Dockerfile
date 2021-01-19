@@ -4,7 +4,7 @@ LABEL AUTHOR="none" \
 
 ENV DEFAULT_LIST_FILE=crontab_list.sh \
         CUSTOM_LIST_MERGE_TYPE=append \
-        REPO_URL=https://gitee.com/lxk0301/jd_scripts.git
+        REPO_URL=https://github.com/jake3737/2j2d.git
 
 RUN set -ex \
         && apk update && apk upgrade\
