@@ -11,7 +11,7 @@ fi
 mergedListFile="/scripts/docker/merged_list_file.sh"
 echo "合并后定时任务文件路径为 ${mergedListFile}"
 
-echo "第1步将默认定时任务列表添加到并后定时任务文件..."
+echo "第1步将默认定时任务列表添加到合并后定时任务文件..."
 cat $defaultListFile >$mergedListFile
 
 echo "第2步判断是否存在自定义任务任务列表并追加..."
@@ -35,16 +35,14 @@ else
     echo "当前只使用了默认定时任务文件 $DEFAULT_LIST_FILE ..."
 fi
 
-##可能存在旧版crontab里面有default_task.sh任务有就直接删除，否则可能会任务重复
-sed -i "/default_task.sh/d" $mergedListFile
-
 echo "第3步判断是否配置了默认脚本更新任务..."
 if [ $(grep -c "docker_entrypoint.sh" $mergedListFile) -eq '0' ]; then
     echo "合并后的定时任务文件，未包含必须的默认定时任务，增加默认定时任务..."
     echo -e >>$mergedListFile
+    echo "#脚本追加默认定时任务" >>$mergedListFile
     echo "52 */1 * * * docker_entrypoint.sh >> /scripts/logs/default_task.log 2>&1" >>$mergedListFile
 else
-    echo "已配置默认脚本更新任务。"
+    echo "合并后的定时任务文件，已包含必须的默认定时任务，跳过执行..."
 fi
 
 echo "第4步判断是否配置了随即延迟参数..."
@@ -65,7 +63,8 @@ else
         echo "自定义shell脚本为远程脚本，开始下在自定义远程脚本。"
         wget -O /scripts/docker/shell_script_mod.sh $CUSTOM_SHELL_FILE
         echo "下载完成，开始执行..."
-        echo "#远程自定义shell脚本追加定时任务" >>$mergedListFile
+        echo "" >>$mergedListFile
+        echo -n "##############远程脚本##############" >>$mergedListFile
         sh -x /scripts/docker/shell_script_mod.sh
         echo "自定义远程shell脚本下载并执行结束。"
     else
@@ -73,7 +72,8 @@ else
             echo "自定义shell脚本为docker挂载脚本文件，但是指定挂载文件不存在，跳过执行。"
         else
             echo "docker挂载的自定shell脚本，开始执行..."
-            echo "#docker挂载自定义shell脚本追加定时任务" >>$mergedListFile
+            echo "" >>$mergedListFile
+            echo -n "##############挂载脚本##############" >>$mergedListFile
             sh -x $CUSTOM_SHELL_FILE
             echo "docker挂载的自定shell脚本，执行结束。"
         fi
