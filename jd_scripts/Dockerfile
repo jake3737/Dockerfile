@@ -22,7 +22,7 @@ RUN git clone ${REPO_URL} /scripts \
 RUN mkdir /jds \
         && cd /jds \
         && git init \
-        && git remote add -f origin https://github.com/Aaron-lv/someDockerfile \
+        && git remote add -f origin https://github.com/jake3737/Dockerfile \
         && git config core.sparsecheckout true \
         && echo jd_scripts >> /jds/.git/info/sparse-checkout \
         && git pull origin master
