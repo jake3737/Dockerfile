@@ -1,3 +1,4 @@
+
 #!/bin/sh
 
 
@@ -11,12 +12,18 @@ else
     cp -R /shylocks/jd*.js /scripts/
 fi
 
-## 直播间红包雨
+## 红包雨
 echo -e >> /scripts/docker/merged_list_file.sh
-echo "#更新直播间红包雨" >> /scripts/docker/merged_list_file.sh
-echo "59 18-20/1 * * * git -C /shylocks reset --hard && git -C /shylocks pull origin main && cp -R /shylocks/jd_live_redrain2.js /scripts/" >> /scripts/docker/merged_list_file.sh
+echo "#更新红包雨" >> /scripts/docker/merged_list_file.sh
+echo "29,59 */1 * * * git -C /shylocks reset --hard && git -C /shylocks pull origin main && cp -R /shylocks/jd*.js /scripts/" >> /scripts/docker/merged_list_file.sh
 echo "#直播间红包雨" >> /scripts/docker/merged_list_file.sh
-echo -n "0,1 19-21/1 * * * node /scripts/jd_live_redrain2.js |ts >> /scripts/logs/jd_live_redrain2.log 2>&1" >> /scripts/docker/merged_list_file.sh
+echo "0,1 19-21/1 * * * node /scripts/jd_live_redrain2.js |ts >> /scripts/logs/jd_live_redrain2.log 2>&1" >> /scripts/docker/merged_list_file.sh
+echo "#半点红包雨" >> /scripts/docker/merged_list_file.sh
+echo "30,31 12-23/1 * * * node /scripts/jd_live_redrain_half.js |ts >> /scripts/logs/jd_live_redrain_half.log 2>&1" >> /scripts/docker/merged_list_file.sh
+echo "#年货直播红包雨" >> /scripts/docker/merged_list_file.sh
+echo "0 0,9,11,13,15,17,19,20,21,23 3,5,20-30/1 1,2 * node /scripts/jd_live_redrain_nian.js |ts >> /scripts/logs/jd_live_redrain_nian.log 2>&1" >> /scripts/docker/merged_list_file.sh
+echo "#官方号直播红包雨" >> /scripts/docker/merged_list_file.sh
+echo -n "0 0,9,11,13,15,17,19,20,21,23 * * * node /scripts/jd_live_redrain_offical.js |ts >> /scripts/logs/jd_live_redrain_offical.log 2>&1" >> /scripts/docker/merged_list_file.sh
 
 ## 宝洁美发屋
 echo -e >> /scripts/docker/merged_list_file.sh
@@ -50,6 +57,10 @@ echo -n "5 7 * * * node /scripts/jd_xg.js |ts >> /scripts/logs/jd_xg.log 2>&1" >
 echo -e >> /scripts/docker/merged_list_file.sh
 echo "#东东爱消除" >> /scripts/docker/merged_list_file.sh
 echo -n "0 * * * * node /scripts/jd_xxl.js |ts >> /scripts/logs/jd_xxl.log 2>&1" >> /scripts/docker/merged_list_file.sh
+## 个护爱消除
+echo -e >> /scripts/docker/merged_list_file.sh
+echo "#个护爱消除" >> /scripts/docker/merged_list_file.sh
+echo -n "40 * * * * node /scripts/jd_xxl_gh.js |ts >> /scripts/logs/jd_xxl_gh.log 2>&1" >> /scripts/docker/merged_list_file.sh
 
 ## 京喜财富岛
 wget -O /scripts/jx_cfd.js https://raw.githubusercontent.com/moposmall/Script/main/Me/jx_cfd.js
@@ -60,7 +71,7 @@ echo -n "0 * * * * node /scripts/jx_cfd.js |ts >> /scripts/logs/jx_cfd.log 2>&1"
 wget -O /scripts/jx_cfdtx.js https://raw.githubusercontent.com/Aaron-lv/JavaScript/master/Task/jx_cfdtx.js
 echo -e >> /scripts/docker/merged_list_file.sh
 echo "#京喜财富岛提现" >> /scripts/docker/merged_list_file.sh
-echo "59 23 * * * sleep 50 && node /scripts/jx_cfdtx.js |ts >> /scripts/logs/jx_cfdtx.log 2>&1" >> /scripts/docker/merged_list_file.sh
+echo "59 23 * * * sleep 58 && node /scripts/jx_cfdtx.js |ts >> /scripts/logs/jx_cfdtx.log 2>&1" >> /scripts/docker/merged_list_file.sh
 
 
 
@@ -68,3 +79,5 @@ echo "59 23 * * * sleep 50 && node /scripts/jx_cfdtx.js |ts >> /scripts/logs/jx_
 sed -i "s/840266@2583822@2585219@2586018@1556311@2583822@2585256@2586023@2728968/754344@2695073@654824@1398507@2274010@715293@2751795@2796229@2484958/g" /scripts/jd_gyec.js
 ## 替换东东爱消除助力码
 sed -i "s/840266@2585219@2586018@1556311@2583822@2585256/754344@2695073@654824@1398507@2274010@715293@2751795@2796229@2484958/g" /scripts/jd_xxl.js
+## 替换个护爱消除助力码
+sed -i "s/840266@2585219@2586018@1556311@2583822@2585256/754344@2695073@654824@1398507@2274010@715293@2751795@2796229@2484958/g" /scripts/jd_xxl_gh.js
