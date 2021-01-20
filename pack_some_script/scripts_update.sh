@@ -8,7 +8,20 @@ customListFile="/pss/$CUSTOM_LIST_FILE"
 mergedListFile="/pss/merged_list_file.sh"
 
 
-#喜马拉雅极速版
+##小米运动刷步数
+function initxmSports() {
+    mkdir /xmSports
+    cd /xmSports
+    git init
+    git remote add -f origin https://gitee.com/lxk0301/jd_scripts
+    git config core.sparsecheckout true
+    echo package.json >>/xmSports/.git/info/sparse-checkout
+    echo backUp/xmSports.js >>/xmSports/.git/info/sparse-checkout
+    git pull origin master
+    npm install
+}
+
+##喜马拉雅极速版
 function initxmly() {
     mkdir /xmly_speed
     cd /xmly_speed
@@ -23,7 +36,7 @@ function initxmly() {
     pip3 install -r requirements.txt
 }
 
-#企鹅读书小程序
+##企鹅读书小程序
 function initRead() {
     mkdir /qqread
     cd /qqread
@@ -38,7 +51,7 @@ function initRead() {
     npm install
 }
 
-#汽车之家极速版
+##汽车之家极速版
 function initQCZJSPEED() {
     mkdir /QCZJSPEED
     cd /QCZJSPEED
@@ -53,7 +66,7 @@ function initQCZJSPEED() {
     npm install
 }
 
-#火山小视频极速版
+##火山小视频极速版
 function inithotsoon() {
     mkdir /hotsoon
     cd /hotsoon
@@ -68,33 +81,58 @@ function inithotsoon() {
     npm install
 }
 
-#小米运动刷步数
-function initxmSports() {
-    mkdir /xmSports
-    cd /xmSports
+##笑谱
+function initiboxpay() {
+    mkdir /iboxpay
+    cd /iboxpay
     git init
-    git remote add -f origin https://gitee.com/lxk0301/jd_scripts
+    git remote add -f origin https://github.com/ziye12/JavaScript
     git config core.sparsecheckout true
-    echo package.json >>/xmSports/.git/info/sparse-checkout
-    echo backUp/xmSports.js >>/xmSports/.git/info/sparse-checkout
-    git pull origin master
+    echo Task/sendNotify.js >>/iboxpay/.git/info/sparse-checkout
+    echo Task/iboxpay.js >>/iboxpay/.git/info/sparse-checkout
+    echo Task/iboxpayCOOKIE.js >>/iboxpay/.git/info/sparse-checkout
+    git pull origin main
+    wget -O /iboxpay/package.json https://raw.githubusercontent.com/ziye12/QCZJSPEED/main/package.json
     npm install
 }
 
-#笑谱视频
-function initxp() {
-    mkdir /xp
-    cd /xp
-    git init
-    git remote add -f origin https://github.com/jake3737/jake-script
-    git config core.sparsecheckout true
-    echo package.json >>/xp/.git/info/sparse-checkout
-    echo xp.js >>/xp/.git/info/sparse-checkout
-    echo sendNotify.js >>/xp/.git/info/sparse-checkout
-    git pull origin master
-    npm install
-}
+##克隆adwktt仓库
+if [ ! -d "/adwktt/" ]; then
+    echo "未检查到adwktt仓库脚本，初始化下载相关脚本"
+    git clone https://github.com/adwktt/adwktt /adwktt
+    wget -O /adwktt/package.json https://raw.githubusercontent.com/ziye12/QCZJSPEED/main/package.json
+    npm install /adwktt
+else
+    echo "更新adwktt脚本相关文件"
+    git -C /adwktt reset --hard
+    git -C /adwktt pull origin master
+    wget -O /adwktt/package.json https://raw.githubusercontent.com/ziye12/QCZJSPEED/main/package.json
+    npm install --prefix /adwktt
+fi
 
+
+##判断小米运动相关变量存在，才会更新相关任务脚本
+if [ 0"$XM_TOKEN" = "0" ]; then
+    echo "没有配置小米运动，相关环境变量参数，跳过配置定时任务"
+else
+    if [ ! -d "/xmSports/" ]; then
+        echo "未检查到xmSports脚本相关文件，初始化下载相关脚本"
+        initxmSports
+    else
+        echo "更新xmSports脚本相关文件"
+        git -C /xmSports reset --hard
+        git -C /xmSports pull origin master
+        npm install --prefix /xmSports
+    fi
+    sed -i "s/let login_token = '';/let login_token = process.env.XM_TOKEN.split();/g" /xmSports/backUp/xmSports.js
+    sed -i "s/19000/20000/g" /xmSports/backUp/xmSports.js
+    if [ 0"$XM_CRON" = "0" ]; then
+        XM_CRON="10 22 * * *"
+    fi
+    echo -e >>$defaultListFile
+    echo "#小米运动刷步数" >>$defaultListFile
+    echo -n "$XM_CRON node /xmSports/backUp/xmSports.js >> /logs/xmSports.log 2>&1" >>$defaultListFile
+fi
 
 ##判断喜马拉雅极速版相关变量存在，才会更新相关任务脚本
 if [ 0"$XMLY_SPEED_COOKIE" = "0" ]; then
@@ -207,51 +245,42 @@ else
     echo -n "$HOTSOON_CRON node /hotsoon/hotsoon.js >> /logs/hotsoon.log 2>&1" >>$defaultListFile
 fi
 
-##判断小米运动相关变量存在，才会更新相关任务脚本
-if [ 0"$XM_TOKEN" = "0" ]; then
-    echo "没有配置小米运动，相关环境变量参数，跳过配置定时任务"
+##判断笑谱相关变量存在，才会更新相关任务脚本
+if [ 0"$XP_iboxpayHEADER" = "0" ]; then
+    echo "没有配置笑谱，相关环境变量参数，跳过配置定时任务"
 else
-    if [ ! -d "/xmSports/" ]; then
-        echo "未检查到xmSports脚本相关文件，初始化下载相关脚本"
-        initxmSports
+    if [ ! -d "/iboxpay/" ]; then
+        echo "未检查到iboxpay脚本相关文件，初始化下载相关脚本"
+        initiboxpay
     else
-        echo "更新xmSports脚本相关文件"
-        git -C /xmSports reset --hard
-        git -C /xmSports pull origin master
-        npm install --prefix /xmSports
-    fi
-    sed -i "s/let login_token = '';/let login_token = process.env.XM_TOKEN.split();/g" /xmSports/backUp/xmSports.js
-    sed -i "s/19000/20000/g" /xmSports/backUp/xmSports.js
-    if [ 0"$XM_CRON" = "0" ]; then
-        XM_CRON="10 22 * * *"
-    fi
-    echo -e >>$defaultListFile
-    echo "#小米运动刷步数" >>$defaultListFile
-    echo -n "$XM_CRON node /xmSports/backUp/xmSports.js >> /logs/xmSports.log 2>&1" >>$defaultListFile
-fi
-
-##判断笑谱视频相关变量存在，才会更新相关任务脚本
-if [ 0"$VIDEOHEADER" = "0" ]; then
-    echo "没有配置笑谱视频，相关环境变量参数，跳过配置定时任务"
-else
-    if [ ! -d "/xp/" ]; then
-        echo "未检查到xp脚本相关文件，初始化下载相关脚本"
-        initxp
-    else
-        echo "更新xp脚本相关文件"
-        git -C /xp reset --hard
-        git -C /xp pull origin master
-        npm install --prefix /xp
+        echo "更新iboxpay脚本相关文件"
+        git -C /iboxpay reset --hard
+        git -C /iboxpay pull origin main
+        wget -O /iboxpay/package.json https://raw.githubusercontent.com/ziye12/QCZJSPEED/main/package.json
+        npm install --prefix /iboxpay
     fi
     if [ 0"$XP_CRON" = "0" ]; then
-        XP_CRON="*/5 * * * *"
+        XP_CRON="*/10 */1 * * *"
     fi
     echo -e >>$defaultListFile
-    echo "#笑谱视频极速版" >>$defaultListFile
-    echo -n "$XP_CRON node /xp/xp.js >> /logs/xp.log 2>&1" >>$defaultListFile
+    echo "#笑谱" >>$defaultListFile
+    echo -n "$XP_CRON node /iboxpay/Task/iboxpay.js >> /logs/iboxpay.log 2>&1" >>$defaultListFile
 fi
 
-###追加|ts 任务日志时间戳
+##判断步步宝相关变量存在，才会配置定时任务
+if [ 0"$BBB_COOKIE" = "0" ]; then
+    echo "没有配置步步宝Cookie，相关环境变量参数，跳过配置定时任务"
+else
+    sed -i "s/let CookieVal = \$.getdata('bbb_ck')/let CookieVal = process.env.BBB_COOKIE.split();/g" /adwktt/BBB.js
+    if [ 0"$BBB_CRON" = "0" ]; then
+        BBB_CRON="0 8-23/2 * * *"
+    fi
+    echo -e >>$defaultListFile
+    echo "#步步宝" >>$defaultListFile
+    echo -n "$BBB_CRON node /adwktt/BBB.js >> /logs/BBB.log 2>&1" >>$defaultListFile
+fi
+
+##追加|ts 任务日志时间戳
 if type ts >/dev/null 2>&1; then
     echo 'moreutils tools installed, default task append |ts output'
     echo '系统已安装moreutils工具包，默认定时任务增加｜ts 输出'
@@ -262,7 +291,7 @@ if type ts >/dev/null 2>&1; then
     sed -i '/|ts/!s/>>/|ts >>/g' $defaultListFile
 fi
 
-#判断 自定义文件是否存在 是否存在
+##判断 自定义文件是否存在 是否存在
 if [ $CUSTOM_LIST_FILE ]; then
     echo "You have configured a custom list file: $CUSTOM_LIST_FILE, custom list merge type: $CUSTOM_LIST_MERGE_TYPE..."
     echo "您配置了自定义任务文件：$CUSTOM_LIST_FILE，自定义任务类型为：$CUSTOM_LIST_MERGE_TYPE..."
@@ -293,7 +322,7 @@ else
     cat $defaultListFile >$mergedListFile
 fi
 
-# 判断最后要加载的定时任务是否包含默认定时任务，不包含的话就加进去
+##判断最后要加载的定时任务是否包含默认定时任务，不包含的话就加进去
 if [ $(grep -c "default_task.sh" $mergedListFile) -eq '0' ]; then
     echo "Merged crontab task file，the required default task is not included, append default task..."
     echo "合并后的定时任务文件，未包含必须的默认定时任务，增加默认定时任务..."
