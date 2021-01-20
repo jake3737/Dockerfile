@@ -5,7 +5,7 @@ LABEL AUTHOR="none" \
 ENV DEFAULT_LIST_FILE=crontab_list.sh \
         CUSTOM_LIST_MERGE_TYPE=append \
         CRZAY_JOY_COIN_ENABLE=Y \
-        REPO_URL=https://gitee.com/jake3737/scripts-jd
+        REPO_URL=https://gitee.com/jake3737/zyjd
     
 RUN set -ex \
         && apk update && apk upgrade \
