@@ -81,18 +81,17 @@ function inithotsoon() {
     npm install
 }
 
-##笑谱
-function initiboxpay() {
-    mkdir /iboxpay
-    cd /iboxpay
+#笑谱视频
+function initxp() {
+    mkdir /xp
+    cd /xp
     git init
-    git remote add -f origin https://github.com/ziye12/JavaScript
+    git remote add -f origin https://github.com/jake3737/script
     git config core.sparsecheckout true
-    echo Task/sendNotify.js >>/iboxpay/.git/info/sparse-checkout
-    echo Task/iboxpay.js >>/iboxpay/.git/info/sparse-checkout
-    echo Task/iboxpayCOOKIE.js >>/iboxpay/.git/info/sparse-checkout
-    git pull origin main
-    wget -O /iboxpay/package.json https://raw.githubusercontent.com/ziye12/QCZJSPEED/main/package.json
+    echo package.json >>/xp/.git/info/sparse-checkout
+    echo xp.js >>/xp/.git/info/sparse-checkout
+    echo sendNotify.js >>/xp/.git/info/sparse-checkout
+    git pull origin master
     npm install
 }
 
@@ -245,26 +244,25 @@ else
     echo -n "$HOTSOON_CRON node /hotsoon/hotsoon.js >> /logs/hotsoon.log 2>&1" >>$defaultListFile
 fi
 
-##判断笑谱相关变量存在，才会更新相关任务脚本
-if [ 0"$XP_iboxpayHEADER" = "0" ]; then
-    echo "没有配置笑谱，相关环境变量参数，跳过配置定时任务"
+##判断笑谱视频相关变量存在，才会更新相关任务脚本
+if [ 0"$VIDEOHEADER" = "0" ]; then
+    echo "没有配置笑谱视频，相关环境变量参数，跳过配置定时任务"
 else
-    if [ ! -d "/iboxpay/" ]; then
-        echo "未检查到iboxpay脚本相关文件，初始化下载相关脚本"
-        initiboxpay
+    if [ ! -d "/xp/" ]; then
+        echo "未检查到xp脚本相关文件，初始化下载相关脚本"
+        initxp
     else
-        echo "更新iboxpay脚本相关文件"
-        git -C /iboxpay reset --hard
-        git -C /iboxpay pull origin main
-        wget -O /iboxpay/package.json https://raw.githubusercontent.com/ziye12/QCZJSPEED/main/package.json
-        npm install --prefix /iboxpay
+        echo "更新xp脚本相关文件"
+        git -C /xp reset --hard
+        git -C /xp pull origin master
+        npm install --prefix /xp
     fi
     if [ 0"$XP_CRON" = "0" ]; then
-        XP_CRON="*/10 */1 * * *"
+        XP_CRON="*/5 * * * *"
     fi
     echo -e >>$defaultListFile
-    echo "#笑谱" >>$defaultListFile
-    echo -n "$XP_CRON node /iboxpay/Task/iboxpay.js >> /logs/iboxpay.log 2>&1" >>$defaultListFile
+    echo "#笑谱视频极速版" >>$defaultListFile
+    echo -n "$XP_CRON node /xp/xp.js >> /logs/xp.log 2>&1" >>$defaultListFile
 fi
 
 ##判断步步宝相关变量存在，才会配置定时任务
