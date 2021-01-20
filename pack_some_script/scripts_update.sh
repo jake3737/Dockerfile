@@ -51,6 +51,36 @@ function initRead() {
     npm install
 }
 
+#sunert 仓库的百度极速版
+function initBaidu() {
+    mkdir /baidu_speed
+    cd /baidu_speed
+    git init
+    git remote add -f origin https://github.com/Sunert/Scripts.git
+    git config core.sparsecheckout true
+    echo Task/package.json >>/baidu_speed/.git/info/sparse-checkout
+    echo Task/baidu_speed.js >>/baidu_speed/.git/info/sparse-checkout
+    echo Task/sendNotify.js >>/baidu_speed/.git/info/sparse-checkout
+    git pull origin master
+    cd Task
+    npm install
+}
+
+#sunert 仓库的快手极速版
+function initkuaishou() {
+    mkdir /kuaishou
+    cd /kuaishou
+    git init
+    git remote add -f origin https://github.com/Sunert/Scripts.git
+    git config core.sparsecheckout true
+    echo Task/package.json >>/kuaishou/.git/info/sparse-checkout
+    echo Task/kuaishou.js >>/kuaishou/.git/info/sparse-checkout
+    echo Task/sendNotify.js >>/kuaishou/.git/info/sparse-checkout
+    git pull origin master
+    cd Task
+    npm install
+}
+
 ##汽车之家极速版
 function initQCZJSPEED() {
     mkdir /QCZJSPEED
@@ -187,6 +217,51 @@ else
     echo -e >>$defaultListFile
     echo "#企鹅读书小程序" >>$defaultListFile
     echo -n "$QQREAD_CRON sleep \$((RANDOM % 180)) && node /qqread/Task/qqreadnode.js >> /logs/qqreadnode.log 2>&1" >>$defaultListFile
+fi
+
+##判断百度极速版COOKIE配置之后才会更新相关任务脚本
+if [ 0"$BAIDU_COOKIE" = "0" ]; then
+    echo "没有配置百度Cookie，相关环境变量参数，跳过下载配置定时任务"
+else
+    if [ ! -d "/baidu_speed/" ]; then
+        echo "未检查到baidu_speed脚本相关文件，初始化下载相关脚本"
+        initBaidu
+    else
+        echo "更新baidu_speed脚本相关文件"
+        git -C /baidu_speed reset --hard
+        git -C /baidu_speed pull origin master
+    fi
+    cp -r /baidu_speed/Task/baidu_speed.js /baidu_speed/Task/baidu_speed_use.js
+    sed -i "s/StartBody/BDCookie/g" /baidu_speed/Task/baidu_speed_use.js
+    sed -i "s/.*process.env.BAIDU_COOKIE.indexOf('\\\n')/else&/g" /baidu_speed/Task/baidu_speed_use.js
+
+    if [ 0"$BAIDU_CRON" = "0" ]; then
+        BAIDU_CRON="10 7-22 * * *"
+    fi
+    echo -e >>$defaultListFile
+    echo "$BAIDU_CRON sleep \$((RANDOM % 120)); node /baidu_speed/Task/baidu_speed_use.js >> /logs/baidu_speed.log 2>&1" >>$defaultListFile
+fi
+
+##判断快手极速版COOKIE配置之后才会更新相关任务脚本
+if [ 0"$KS_TOKEN" = "0" ]; then
+    echo "没有配置快手Cookie，相关环境变量参数，跳过下载配置定时任务"
+else
+    echo "配置了KS_TOKEN所以使用 @sunert 仓库的脚本执行任务"
+
+    if [ ! -d "/kuaishou/" ]; then
+        echo "未检查到kuaishou脚本相关文件，初始化下载相关脚本"
+        initkuaishou
+    else
+        echo "更新kuaishou脚本相关文件"
+        git -C /kuaishou reset --hard
+        git -C /kuaishou pull origin master
+    fi
+
+    if [ 0"$KUAISHOU_CRON" = "0" ]; then
+        KUAISHOU_CRON="10 9 * * *"
+    fi
+    echo -e >>$defaultListFile
+    echo "$KUAISHOU_CRON sleep \$((RANDOM % 120)); node /kuaishou/Task/kuaishou.js >> /logs/kuaishou.log 2>&1" >>$defaultListFile
 fi
 
 ##判断汽车之家极速版相关变量存在，才会更新相关任务脚本
