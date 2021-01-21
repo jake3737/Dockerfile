@@ -13,7 +13,7 @@ echo "Get the latest task related code ..."
 echo "获取最新定时任务相关代码"
 echo "##############################################################################"
 cd /pss
-git pull origin master
+git pull origin master --rebase
 cd sunert_scripts
 cp crontab_list.sh default_task.sh scripts_update.sh /pss
 echo "##############################################################################"

@@ -4,7 +4,7 @@ set -e
 echo "Pull the Scripts latest code..."
 echo "git 拉取最新代码..."
 git -C /Scripts reset --hard
-git -C /Scripts pull origin master
+git -C /Scripts pull origin master --rebase
 npm install --prefix /Scripts
 
 

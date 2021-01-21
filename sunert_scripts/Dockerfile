@@ -15,7 +15,7 @@ RUN mkdir /logs \
         && git remote add -f origin https://github.com/Aaron-lv/someDockerfile \
         && git config core.sparsecheckout true \
         && echo sunert_scripts >> /pss/.git/info/sparse-checkout \
-        && git pull origin master \
+        && git pull origin master --rebase \
         && cp /pss/sunert_scripts/crontab_list.sh /pss/crontab_list.sh
 
 
