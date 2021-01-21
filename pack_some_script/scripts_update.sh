@@ -130,7 +130,7 @@ function initBBB() {
     mkdir /BBB
     cd /BBB
     git init
-    git clone https://github.com/jake3737/script
+    git remote add -f origin https://github.com/jake3737/script
     git config core.sparsecheckout true
     echo package.json >>/BBB/.git/info/sparse-checkout
     echo BBB.js >>/BBB/.git/info/sparse-checkout
