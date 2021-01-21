@@ -125,20 +125,19 @@ function initxp() {
     npm install
 }
 
-##克隆adwktt仓库
-if [ ! -d "/adwktt/" ]; then
-    echo "未检查到adwktt仓库脚本，初始化下载相关脚本"
-    git clone https://github.com/adwktt/adwktt /adwktt
-    wget -O /adwktt/package.json https://raw.githubusercontent.com/ziye12/QCZJSPEED/main/package.json
-    npm install /adwktt
-else
-    echo "更新adwktt脚本相关文件"
-    git -C /adwktt reset --hard
-    git -C /adwktt pull origin master
-    wget -O /adwktt/package.json https://raw.githubusercontent.com/ziye12/QCZJSPEED/main/package.json
-    npm install --prefix /adwktt
-fi
-
+##步步宝
+function initBBB() {
+    mkdir /BBB
+    cd /BBB
+    git init
+    git clone https://github.com/jake3737/script
+    git config core.sparsecheckout true
+    echo package.json >>/BBB/.git/info/sparse-checkout
+    echo BBB.js >>/BBB/.git/info/sparse-checkout
+    echo sendNotify.js >>/BBB/.git/info/sparse-checkout
+    git pull origin master
+    npm install
+}
 
 ##判断小米运动相关变量存在，才会更新相关任务脚本
 if [ 0"$XM_TOKEN" = "0" ]; then
@@ -341,16 +340,24 @@ else
 fi
 
 ##判断步步宝相关变量存在，才会配置定时任务
-if [ 0"$BBB_COOKIE" = "0" ]; then
-    echo "没有配置步步宝Cookie，相关环境变量参数，跳过配置定时任务"
+if [ 0"$BBB_ck" = "0" ]; then
+    echo "没有配置步步宝，相关环境变量参数，跳过配置定时任务"
 else
-    sed -i "s/let CookieVal = \$.getdata('bbb_ck')/let CookieVal = process.env.BBB_COOKIE.split();/g" /adwktt/BBB.js
+    if [ ! -d "/BBB/" ]; then
+        echo "未检查到BBB脚本相关文件，初始化下载相关脚本"
+        initBBB
+    else
+        echo "更新BBB脚本相关文件"
+        git -C /BBB reset --hard
+        git -C /BBB pull origin master
+        npm install --prefix /BBB
+    fi
     if [ 0"$BBB_CRON" = "0" ]; then
-        BBB_CRON="0 8-23/2 * * *"
+        BBB_CRON="0 7-23/2 * * *"
     fi
     echo -e >>$defaultListFile
     echo "#步步宝" >>$defaultListFile
-    echo -n "$BBB_CRON node /adwktt/BBB.js >> /logs/BBB.log 2>&1" >>$defaultListFile
+    echo -n "$BBB_CRON node /BBB/BBB.js >> /logs/BBB.log 2>&1" >>$defaultListFile
 fi
 
 ##追加|ts 任务日志时间戳
