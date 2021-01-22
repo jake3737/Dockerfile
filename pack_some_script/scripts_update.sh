@@ -99,14 +99,14 @@ function initiboxpay() {
 ##克隆adwktt仓库
 if [ ! -d "/adwktt/" ]; then
     echo "未检查到adwktt仓库脚本，初始化下载相关脚本"
-    git clone https://github.com/adwktt/adwktt /adwktt
-    wget -O /adwktt/package.json https://github.com/jake3737/script/package.json
+    git clone https://github.com/jake3737/111 /adwktt
+    wget -O /adwktt/package.json https://github.com/jake3737/111/package.json
     npm install /adwktt
 else
     echo "更新adwktt脚本相关文件"
     git -C /adwktt reset --hard
     git -C /adwktt pull origin master --rebase
-    wget -O /adwktt/package.json https://github.com/jake3737/script/package.json
+    wget -O /adwktt/package.json https://github.com/jake3737/111/package.json
     npm install --prefix /adwktt
 fi
 
