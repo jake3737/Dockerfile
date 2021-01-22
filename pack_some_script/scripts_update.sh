@@ -97,19 +97,19 @@ function initiboxpay() {
 }
 
 ##克隆adwktt仓库
-if [ ! -d "/adwktt/" ]; then
-    echo "未检查到adwktt仓库脚本，初始化下载相关脚本"
-    git clone https://github.com/jake3737/111 /adwktt
-    wget -O /adwktt/package.json https://github.com/jake3737/111/package.json
-    npm install /adwktt
-else
-    echo "更新adwktt脚本相关文件"
-    git -C /adwktt reset --hard
-    git -C /adwktt pull origin master --rebase
-    wget -O /adwktt/package.json https://github.com/jake3737/111/package.json
-    npm install --prefix /adwktt
-fi
-
+function initadwktt() {
+    mkdir /adwktt
+    cd /adwktt
+    git init
+    git remote add -f origin https://github.com/jake3737/111
+    git config core.sparsecheckout true
+    echo package.json >>/adwktt/.git/info/sparse-checkout
+    echo hotsoon.js >>/adwktt/.git/info/sparse-checkout
+    echo sendNotify.js >>/adwktt/.git/info/sparse-checkout
+    git pull origin master --rebase
+    mv /adwktt/package.json /hotsoon/package.json
+    npm install
+}
 
 ##判断小米运动相关变量存在，才会更新相关任务脚本
 if [ 0"$XM_TOKEN" = "0" ]; then
