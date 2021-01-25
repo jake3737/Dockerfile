@@ -28,12 +28,8 @@ else
         git -C /baidu_speed reset --hard
         git -C /baidu_speed pull origin master
     fi
-    cp -r /baidu_speed/Task/baidu_speed.js /baidu_speed/Task/baidu_speed_use.js
     cp /baidu_speed/Task/baidu_speed.js /baidu_speed/Task/baidu_speed_backup.js
     sed -i "s/let CookieVal = \$.getdata('BAIDU_COOKIE')/let CookieVal = process.env.BAIDU_CK.split();/g" /baidu_speed/Task/baidu_speed.js
-    sed -i "s/StartBody/BDCookie/g" /baidu_speed/Task/baidu_speed_use.js
-    sed -i "s/.*process.env.BAIDU_COOKIE.indexOf('\\\n')/else&/g" /baidu_speed/Task/baidu_speed_use.js
-
     if [ 0"$BAIDU_CRON" = "0" ]; then
         BAIDU_CRON="10 7-22 * * *"
     fi
