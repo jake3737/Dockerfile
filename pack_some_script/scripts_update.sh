@@ -230,7 +230,7 @@ else
         git -C /baidu_speed reset --hard
         git -C /baidu_speed pull origin master
     fi
-    cp /baidu_speed/Task/baidu_speed.js /baidu_speed/Task/baidu_speed_use.js
+    cp -r /baidu_speed/Task/baidu_speed.js /baidu_speed/Task/baidu_speed_use.js
     sed -i "s/StartBody/BDCookie/g" /baidu_speed/Task/baidu_speed_use.js
     sed -i "s/.*process.env.BAIDU_COOKIE.indexOf('\\\n')/else&/g" /baidu_speed/Task/baidu_speed_use.js
 
@@ -241,31 +241,42 @@ else
     echo "$BAIDU_CRON sleep \$((RANDOM % 120)); node /baidu_speed/Task/baidu_speed_use.js >> /logs/baidu_speed.log 2>&1" >>$defaultListFile
 fi
 
-
 if [ 0"$BAIDU_COOKIE2" = "0" ]; then
-    echo "没有配置百度Cookie2，相关环境变量参数，跳过配置定时任务"
+    echo "没有配置百度Cookie2，相关环境变量参数，跳过下载配置定时任务"
 else
-    cp /baidu_speed/Task/baidu_speed_use.js /baidu_speed/Task/baidu_speed_use2.js
+    if [ ! -d "/baidu_speed/" ]; then
+        echo "未检查到baidu_speed脚本相关文件，初始化下载相关脚本"
+        initBaidu
+    else
+        echo "更新baidu_speed脚本相关文件"
+        git -C /baidu_speed reset --hard
+        git -C /baidu_speed pull origin master
+    fi
+    cp -r /baidu_speed/Task/baidu_speed.js /baidu_speed/Task/baidu_speed_use2.js
     sed -i "s/StartBody/BDCookie/g" /baidu_speed/Task/baidu_speed_use2.js
     sed -i "s/.*process.env.BAIDU_COOKIE2.indexOf('\\\n')/else&/g" /baidu_speed/Task/baidu_speed_use2.js
+
     if [ 0"$BAIDU_CRON" = "0" ]; then
-        BAIDU_CRON="0 8-23/2 * * *"
+        BAIDU_CRON="10 7-22 * * *"
     fi
-    echo "#百度2" >>$defaultListFile
-    echo "$BAIDU_CRON node /baidu_speed/Task/baidu_speed_use2.js >> /logs/baidu_speed2.log 2>&1" >>$defaultListFile
+    echo -e >>$defaultListFile
+    echo "$BAIDU_CRON sleep \$((RANDOM % 120)); node /baidu_speed/Task/baidu_speed_use2.js >> /logs/baidu_speed2.log 2>&1" >>$defaultListFile
 fi
 
 if [ 0"$BAIDU_COOKIE3" = "0" ]; then
-    echo "没有配置百度Cookie3，相关环境变量参数，跳过配置定时任务"
+    echo "没有配置百度Cookie2，相关环境变量参数，跳过配置定时任务"
 else
-    cp /baidu_speed/Task/baidu_speed_use.js /baidu_speed/Task/baidu_speed_use3.js
-    sed -i "s/StartBody/BDCookie/g = s/.*process.env.BAIDU_COOKIE3.indexOf('\\\n')/else&/g" /baidu_speed/Task/baidu_speed_use3.js
+    cp -r /baidu_speed/Task/baidu_speed.js /baidu_speed/Task/baidu_speed_use3.js
+    sed -i "s/StartBody/BDCookie/g" /baidu_speed/Task/baidu_speed_use3.js
+    sed -i "s/.*process.env.BAIDU_COOKIE3.indexOf('\\\n')/else&/g" /baidu_speed/Task/baidu_speed_use3.js
     if [ 0"$BAIDU_CRON" = "0" ]; then
         BAIDU_CRON="0 8-23/2 * * *"
     fi
     echo "#百度3" >>$defaultListFile
     echo "$BAIDU_CRON node /baidu_speed/Task/baidu_speed_use3.js >> /logs/baidu_speed3.log 2>&1" >>$defaultListFile
 fi
+
+
 
 
 ##判断快手极速版COOKIE配置之后才会更新相关任务脚本
