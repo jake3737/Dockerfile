@@ -51,6 +51,21 @@ function initRead() {
     npm install
 }
 
+#sunert 仓库的百度极速版
+function initBaidu() {
+    mkdir /baidu_speed
+    cd /baidu_speed
+    git init
+    git remote add -f origin https://github.com/Sunert/Scripts.git
+    git config core.sparsecheckout true
+    echo Task/package.json >>/baidu_speed/.git/info/sparse-checkout
+    echo Task/baidu_speed.js >>/baidu_speed/.git/info/sparse-checkout
+    echo Task/sendNotify.js >>/baidu_speed/.git/info/sparse-checkout
+    git pull origin master
+    cd Task
+    npm install
+}
+
 #sunert 仓库的快手极速版
 function initkuaishou() {
     mkdir /kuaishou
@@ -203,6 +218,55 @@ else
     echo -n "$QQREAD_CRON sleep \$((RANDOM % 180)) && node /qqread/Task/qqreadnode.js >> /logs/qqreadnode.log 2>&1" >>$defaultListFile
 fi
 
+##判断百度极速版COOKIE配置之后才会更新相关任务脚本
+if [ 0"$BAIDU_COOKIE" = "0" ]; then
+    echo "没有配置百度Cookie，相关环境变量参数，跳过下载配置定时任务"
+else
+    if [ ! -d "/baidu_speed/" ]; then
+        echo "未检查到baidu_speed脚本相关文件，初始化下载相关脚本"
+        initBaidu
+    else
+        echo "更新baidu_speed脚本相关文件"
+        git -C /baidu_speed reset --hard
+        git -C /baidu_speed pull origin master
+    fi
+    cp -r /baidu_speed/Task/baidu_speed.js /baidu_speed/Task/baidu_speed_use.js
+    sed -i "s/StartBody/BDCookie/g" /baidu_speed/Task/baidu_speed_use.js
+    sed -i "s/.*process.env.BAIDU_COOKIE.indexOf('\\\n')/else&/g" /baidu_speed/Task/baidu_speed_use.js
+
+    if [ 0"$BAIDU_CRON" = "0" ]; then
+        BAIDU_CRON="10 7-22 * * *"
+    fi
+    echo -e >>$defaultListFile
+    echo "$BAIDU_CRON sleep \$((RANDOM % 120)); node /baidu_speed/Task/baidu_speed_use.js >> /logs/baidu_speed.log 2>&1" >>$defaultListFile
+fi
+
+
+if [ 0"$BAIDU_COOKIE2" = "0" ]; then
+    echo "没有配置百度Cookie2，相关环境变量参数，跳过配置定时任务"
+else
+    cp /baidu_speed/Task/baidu_speed_use.js /baidu_speed/Task/baidu_speed_use2.js
+    sed -i "s/StartBody/BDCookie/g" /baidu_speed/Task/baidu_speed_use2.js
+    sed -i "s/.*process.env.BAIDU_COOKIE2.indexOf('\\\n')/else&/g" /baidu_speed/Task/baidu_speed_use2.js
+    if [ 0"$BAIDU_CRON" = "0" ]; then
+        BAIDU_CRON="0 8-23/2 * * *"
+    fi
+    echo "#百度2" >>$defaultListFile
+    echo "$BAIDU_CRON node /baidu_speed/Task/baidu_speed_use.js >> /logs/baidu_speed2.log 2>&1" >>$defaultListFile
+fi
+
+if [ 0"$BAIDU_COOKIE3" = "0" ]; then
+    echo "没有配置百度Cookie3，相关环境变量参数，跳过配置定时任务"
+else
+    cp /baidu_speed/Task/baidu_speed_use.js /baidu_speed/Task/baidu_speed_use3.js
+    sed -i "s/let CookieVal = \$.getdata('BAIDU_COOKIE3')/let CookieVal = process.env.BAIDU_CK3.split();/g" /baidu_speed/Task/baidu_speed_use3.js
+    if [ 0"$BAIDU_CRON" = "0" ]; then
+        BAIDU_CRON="0 8-23/2 * * *"
+    fi
+    echo "#百度3" >>$defaultListFile
+    echo "$BAIDU_CRON node /baidu_speed/Task/baidu_speed_use3.js >> /logs/baidu_speed3.log 2>&1" >>$defaultListFile
+fi
+
 
 ##判断快手极速版COOKIE配置之后才会更新相关任务脚本
 if [ 0"$KS_TOKEN" = "0" ]; then
@@ -348,27 +412,6 @@ else
     fi
     echo "#步步宝3" >>$defaultListFile
     echo "$BBB_CRON node /BBB/BBB3.js >> /logs/BBB3.log 2>&1" >>$defaultListFile
-fi
-
-##增加自定义shell脚本
-if [ 0"$CUSTOM_SHELL_FILE" = "0" ]; then
-    echo "未配置自定shell脚本文件，跳过执行。"
-else
-    if expr "$CUSTOM_SHELL_FILE" : 'http.*' &>/dev/null; then
-        echo "自定义shell脚本为远程脚本，开始下在自定义远程脚本。"
-        wget -O /pss/pss_shell_mod.sh $CUSTOM_SHELL_FILE
-        echo "下载完成，开始执行..."
-        sh -x /pss/pss_shell_mod.sh
-        echo "自定义远程shell脚本下载并执行结束。"
-    else
-        if [ ! -f $CUSTOM_SHELL_FILE ]; then
-            echo "自定义shell脚本为docker挂载脚本文件，但是指定挂载文件不存在，跳过执行。"
-        else
-            echo "docker挂载的自定shell脚本，开始执行..."
-            sh -x $CUSTOM_SHELL_FILE
-            echo "docker挂载的自定shell脚本，执行结束。"
-        fi
-    fi
 fi
 
 ##追加|ts 任务日志时间戳
