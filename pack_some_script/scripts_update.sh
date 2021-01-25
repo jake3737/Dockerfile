@@ -246,12 +246,13 @@ if [ 0"$BAIDU_COOKIE2" = "0" ]; then
     echo "没有配置百度Cookie2，相关环境变量参数，跳过配置定时任务"
 else
     cp /baidu_speed/Task/baidu_speed_use.js /baidu_speed/Task/baidu_speed_use2.js
-    sed -i "s/StartBody/BDCookie/g" /baidu_speed/Task/baidu_speed_use2.js = "s/.*process.env.BAIDU_COOKIE2.indexOf('\\\n')/else&/g" /baidu_speed/Task/baidu_speed_use3.js
+    sed -i "s/StartBody/BDCookie/g" /baidu_speed/Task/baidu_speed_use2.js
+    sed -i "s/.*process.env.BAIDU_COOKIE2.indexOf('\\\n')/else&/g" /baidu_speed/Task/baidu_speed_use2.js
     if [ 0"$BAIDU_CRON" = "0" ]; then
         BAIDU_CRON="0 8-23/2 * * *"
     fi
     echo "#百度2" >>$defaultListFile
-    echo "$BAIDU_CRON node /baidu_speed/Task/baidu_speed_use.js >> /logs/baidu_speed2.log 2>&1" >>$defaultListFile
+    echo "$BAIDU_CRON node /baidu_speed/Task/baidu_speed_use2.js >> /logs/baidu_speed2.log 2>&1" >>$defaultListFile
 fi
 
 if [ 0"$BAIDU_COOKIE3" = "0" ]; then
