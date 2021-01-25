@@ -375,11 +375,11 @@ else
     echo "$BBB_CRON node /BBB/BBB2.js >> /logs/BBB2.log 2>&1" >>$defaultListFile
 fi
 
-if [ 0"$BBB_COOKIE" = "0" ]; then
+if [ 0"$BBB_COOKIE3" = "0" ]; then
     echo "没有配置步步宝Cookie3，相关环境变量参数，跳过配置定时任务"
 else
     cp /BBB/BBB_BACKUP.js /BBB/BBB3.js
-    sed -i "s/let CookieVal = \$.getdata('bbb_ck')/let CookieVal = process.env.BBB_COOKIE2.split();/g" /BBB/BBB3.js
+    sed -i "s/let CookieVal = \$.getdata('bbb_ck')/let CookieVal = process.env.BBB_COOKIE3.split();/g" /BBB/BBB3.js
     if [ 0"$BBB_CRON" = "0" ]; then
         BBB_CRON="0 8-23/2 * * *"
     fi
