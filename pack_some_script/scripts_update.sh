@@ -339,6 +339,7 @@ else
     echo -n "$XP_CRON node /xp/xp.js >> /logs/xp.log 2>&1" >>$defaultListFile
 fi
 
+
 ##判断步步宝相关变量存在，才会配置定时任务
 if [ 0"$BBB_ck" = "0" ]; then
     echo "没有配置步步宝，相关环境变量参数，跳过配置定时任务"
@@ -351,6 +352,8 @@ else
         git -C /BBB reset --hard
         git -C /BBB pull origin master
         npm install --prefix /BBB
+        cp /BBB/BBB.js /BBB/BBB_BACKUP.js
+        sed -i "s/let CookieVal = \$.getdata('bbb_ck')/let CookieVal = process.env.BBB_ck.split();/g" /BBB/BBB.js
     fi
     if [ 0"$BBB_CRON" = "0" ]; then
         BBB_CRON="0 7-23/2 * * *"
@@ -358,6 +361,30 @@ else
     echo -e >>$defaultListFile
     echo "#步步宝" >>$defaultListFile
     echo -n "$BBB_CRON node /BBB/BBB.js >> /logs/BBB.log 2>&1" >>$defaultListFile
+fi
+
+if [ 0"$BBB_ck2" = "0" ]; then
+    echo "没有配置步步宝Cookie2，相关环境变量参数，跳过配置定时任务"
+else
+    cp /BBB/BBB_BACKUP.js /BBB/BBB2.js
+    sed -i "s/let CookieVal = \$.getdata('bbb_ck')/let CookieVal = process.env.BBB_ck2.split();/g" /BBB/BBB2.js
+    if [ 0"$BBB_CRON" = "0" ]; then
+        BBB_CRON="0 8-23/2 * * *"
+    fi
+    echo "#步步宝2" >>$defaultListFile
+    echo "$BBB_CRON node /BBB/BBB2.js >> /logs/BBB2.log 2>&1" >>$defaultListFile
+fi
+
+if [ 0"$BBB_ck3" = "0" ]; then
+    echo "没有配置步步宝Cookie3，相关环境变量参数，跳过配置定时任务"
+else
+    cp /BBB/BBB_BACKUP.js /BBB/BBB3.js
+    sed -i "s/let CookieVal = \$.getdata('bbb_ck')/let CookieVal = process.env.BBB_ck3.split();/g" /BBB/BBB3.js
+    if [ 0"$BBB_CRON" = "0" ]; then
+        BBB_CRON="0 8-23/2 * * *"
+    fi
+    echo "#步步宝2" >>$defaultListFile
+    echo "$BBB_CRON node /BBB/BBB3.js >> /logs/BBB3.log 2>&1" >>$defaultListFile
 fi
 
 ##追加|ts 任务日志时间戳
