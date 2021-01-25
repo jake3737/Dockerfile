@@ -230,7 +230,7 @@ else
         git -C /baidu_speed reset --hard
         git -C /baidu_speed pull origin master
     fi
-    cp -r /baidu_speed/Task/baidu_speed.js /baidu_speed/Task/baidu_speed_use.js
+    cp /baidu_speed/Task/baidu_speed.js /baidu_speed/Task/baidu_speed_use.js
     sed -i "s/StartBody/BDCookie/g" /baidu_speed/Task/baidu_speed_use.js
     sed -i "s/.*process.env.BAIDU_COOKIE.indexOf('\\\n')/else&/g" /baidu_speed/Task/baidu_speed_use.js
 
@@ -246,8 +246,7 @@ if [ 0"$BAIDU_COOKIE2" = "0" ]; then
     echo "没有配置百度Cookie2，相关环境变量参数，跳过配置定时任务"
 else
     cp /baidu_speed/Task/baidu_speed_use.js /baidu_speed/Task/baidu_speed_use2.js
-    sed -i "s/StartBody/BDCookie/g" /baidu_speed/Task/baidu_speed_use2.js
-    sed -i "s/.*process.env.BAIDU_COOKIE2.indexOf('\\\n')/else&/g" /baidu_speed/Task/baidu_speed_use2.js
+    sed -i "s/StartBody/BDCookie/g" /baidu_speed/Task/baidu_speed_use2.js = "s/.*process.env.BAIDU_COOKIE2.indexOf('\\\n')/else&/g" /baidu_speed/Task/baidu_speed_use3.js
     if [ 0"$BAIDU_CRON" = "0" ]; then
         BAIDU_CRON="0 8-23/2 * * *"
     fi
@@ -259,7 +258,7 @@ if [ 0"$BAIDU_COOKIE3" = "0" ]; then
     echo "没有配置百度Cookie3，相关环境变量参数，跳过配置定时任务"
 else
     cp /baidu_speed/Task/baidu_speed_use.js /baidu_speed/Task/baidu_speed_use3.js
-    sed -i "s/let CookieVal = \$.getdata('BAIDU_COOKIE3')/let CookieVal = process.env.BAIDU_CK3.split();/g" /baidu_speed/Task/baidu_speed_use3.js
+    sed -i "s/StartBody/BDCookie/g = s/.*process.env.BAIDU_COOKIE3.indexOf('\\\n')/else&/g" /baidu_speed/Task/baidu_speed_use3.js
     if [ 0"$BAIDU_CRON" = "0" ]; then
         BAIDU_CRON="0 8-23/2 * * *"
     fi
