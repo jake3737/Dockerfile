@@ -8,6 +8,19 @@ customListFile="/pss/$CUSTOM_LIST_FILE"
 mergedListFile="/pss/merged_list_file.sh"
 
 
+##小米运动刷步数
+function initxmSports() {
+    mkdir /xmSports
+    cd /xmSports
+    git init
+    git remote add -f origin https://gitee.com/lxk0301/jd_scripts
+    git config core.sparsecheckout true
+    echo package.json >>/xmSports/.git/info/sparse-checkout
+    echo backUp/xmSports.js >>/xmSports/.git/info/sparse-checkout
+    git pull origin master
+    npm install
+}
+
 ##喜马拉雅极速版
 function initxmly() {
     mkdir /xmly_speed
@@ -18,7 +31,7 @@ function initxmly() {
     echo rsa >>/xmly_speed/.git/info/sparse-checkout
     echo xmly_speed.py >>/xmly_speed/.git/info/sparse-checkout
     echo requirements.txt >>/xmly_speed/.git/info/sparse-checkout
-    git pull origin master --rebase
+    git pull origin master
     pip3 install --upgrade pip
     pip3 install -r requirements.txt
 }
@@ -34,7 +47,22 @@ function initRead() {
     echo Task/qqreadnode.js >>/qqread/.git/info/sparse-checkout
     echo Task/qqreadCOOKIE.js >>/qqread/.git/info/sparse-checkout
     echo Task/sendNotify.js >>/qqread/.git/info/sparse-checkout
-    git pull origin master --rebase
+    git pull origin master
+    npm install
+}
+
+#sunert 仓库的快手极速版
+function initkuaishou() {
+    mkdir /kuaishou
+    cd /kuaishou
+    git init
+    git remote add -f origin https://github.com/Sunert/Scripts.git
+    git config core.sparsecheckout true
+    echo Task/package.json >>/kuaishou/.git/info/sparse-checkout
+    echo Task/kuaishou.js >>/kuaishou/.git/info/sparse-checkout
+    echo Task/sendNotify.js >>/kuaishou/.git/info/sparse-checkout
+    git pull origin master
+    cd Task
     npm install
 }
 
@@ -49,7 +77,7 @@ function initQCZJSPEED() {
     echo Task/qczjspeed.js >>/QCZJSPEED/.git/info/sparse-checkout
     echo Task/qczjspeedCOOKIE.js >>/QCZJSPEED/.git/info/sparse-checkout
     echo Task/sendNotify.js >>/QCZJSPEED/.git/info/sparse-checkout
-    git pull origin main --rebase
+    git pull origin main
     npm install
 }
 
@@ -63,63 +91,60 @@ function inithotsoon() {
     echo package1.json >>/hotsoon/.git/info/sparse-checkout
     echo hotsoon.js >>/hotsoon/.git/info/sparse-checkout
     echo sendNotify.js >>/hotsoon/.git/info/sparse-checkout
-    git pull origin master --rebase
+    git pull origin master
     mv /hotsoon/package1.json /hotsoon/package.json
     npm install
 }
 
-##克隆ZIYE_JavaScript仓库
-if [ ! -d "/ZIYE_JavaScript/" ]; then
-    echo "未检查到ZIYE_JavaScript仓库脚本，初始化下载相关脚本"
-    mkdir /ZIYE_JavaScript
-    cd /ZIYE_JavaScript
+#笑谱视频
+function initxp() {
+    mkdir /xp
+    cd /xp
     git init
-    git remote add -f origin https://github.com/ziye12/JavaScript
+    git remote add -f origin https://github.com/jake3737/script
     git config core.sparsecheckout true
-    echo Task >>/ZIYE_JavaScript/.git/info/sparse-checkout
-    git pull origin main --rebase
-    wget -O /ZIYE_JavaScript/package.json https://raw.githubusercontent.com/ziye12/QCZJSPEED/main/package.json
+    echo package.json >>/xp/.git/info/sparse-checkout
+    echo xp.js >>/xp/.git/info/sparse-checkout
+    echo sendNotify.js >>/xp/.git/info/sparse-checkout
+    git pull origin master
     npm install
-else
-    echo "更新ZIYE_JavaScript脚本相关文件"
-    git -C /ZIYE_JavaScript reset --hard
-    git -C /ZIYE_JavaScript pull origin main --rebase
-    wget -O /ZIYE_JavaScript/package.json https://raw.githubusercontent.com/ziye12/QCZJSPEED/main/package.json
-    npm install --prefix /ZIYE_JavaScript
-fi
+}
 
-##克隆adwktt仓库
-if [ ! -d "/adwktt/" ]; then
-    echo "未检查到adwktt仓库脚本，初始化下载相关脚本"
-    git clone https://github.com/adwktt/adwktt /adwktt
-    wget -O /adwktt/package.json https://raw.githubusercontent.com/ziye12/QCZJSPEED/main/package.json
-    npm install /adwktt
-else
-    echo "更新adwktt脚本相关文件"
-    git -C /adwktt reset --hard
-    git -C /adwktt pull origin master --rebase
-    wget -O /adwktt/package.json https://raw.githubusercontent.com/ziye12/QCZJSPEED/main/package.json
-    npm install --prefix /adwktt
-fi
-
+##步步宝
+function initBBB() {
+    mkdir /BBB
+    cd /BBB
+    git init
+    git remote add -f origin https://github.com/jake3737/script
+    git config core.sparsecheckout true
+    echo package.json >>/BBB/.git/info/sparse-checkout
+    echo BBB.js >>/BBB/.git/info/sparse-checkout
+    echo sendNotify.js >>/BBB/.git/info/sparse-checkout
+    git pull origin master
+    npm install
+}
 
 ##判断小米运动相关变量存在，才会更新相关任务脚本
-if [ 0"$XMYD_USER" = "0" ]; then
+if [ 0"$XM_TOKEN" = "0" ]; then
     echo "没有配置小米运动，相关环境变量参数，跳过配置定时任务"
 else
     if [ ! -d "/xmSports/" ]; then
         echo "未检查到xmSports脚本相关文件，初始化下载相关脚本"
-        git clone https://github.com/FKPYW/mimotion /xmSports
+        initxmSports
     else
         echo "更新xmSports脚本相关文件"
         git -C /xmSports reset --hard
-        git -C /xmSports pull origin main --rebase
+        git -C /xmSports pull origin master
+        npm install --prefix /xmSports
     fi
+    sed -i "s/let login_token = '';/let login_token = process.env.XM_TOKEN.split();/g" /xmSports/backUp/xmSports.js
+    sed -i "s/19000/20000/g" /xmSports/backUp/xmSports.js
     if [ 0"$XM_CRON" = "0" ]; then
         XM_CRON="10 22 * * *"
     fi
+    echo -e >>$defaultListFile
     echo "#小米运动刷步数" >>$defaultListFile
-    echo "$XM_CRON python3 /xmSports/main.py >> /logs/xmSports.log 2>&1" >>$defaultListFile
+    echo -n "$XM_CRON node /xmSports/backUp/xmSports.js >> /logs/xmSports.log 2>&1" >>$defaultListFile
 fi
 
 ##判断喜马拉雅极速版相关变量存在，才会更新相关任务脚本
@@ -132,7 +157,7 @@ else
     else
         echo "更新xmly_speed脚本相关文件"
         git -C /xmly_speed reset --hard
-        git -C /xmly_speed pull origin master --rebase
+        git -C /xmly_speed pull origin master
         cd /xmly_speed
         pip3 install -r requirements.txt
     fi
@@ -147,8 +172,9 @@ else
     if [ 0"$XMLY_CRON" = "0" ]; then
         XMLY_CRON="*/30 */1 * * *"
     fi
+    echo -e >>$defaultListFile
     echo "#喜马拉雅极速版">>$defaultListFile
-    echo "$XMLY_CRON python3 /xmly_speed/xmly_speed.py >> /logs/xmly_speed.log 2>&1" >>$defaultListFile
+    echo -n "$XMLY_CRON python3 /xmly_speed/xmly_speed.py >> /logs/xmly_speed.log 2>&1" >>$defaultListFile
 fi
 
 ##判断企鹅读书小程序相关变量存在，才会更新相关任务脚本
@@ -161,18 +187,43 @@ else
     else
         echo "更新qqreadnode脚本相关文件"
         git -C /qqread reset --hard
-        git -C /qqread pull origin master --rebase
+        git -C /qqread pull origin master
         npm install --prefix /qqread
     fi
     echo "Replace some qqread scripts content to be compatible with env configuration ..."
     echo "替换企鹅读书小程序脚本相关内容以兼容环境变量配置..."
     sed -i "s/notifyttt = 1/notifyttt = process.env.QQREAD_NOTIFYTTT || 1/g" /qqread/Task/qqreadnode.js
     sed -i "s/notifyInterval = 2/notifyInterval = process.env.QQREAD_NOTIFY_INTERVAL || 2/g" /qqread/Task/qqreadnode.js
+
     if [ 0"$QQREAD_CRON" = "0" ]; then
         QQREAD_CRON="*/20 */1 * * *"
     fi
+    echo -e >>$defaultListFile
     echo "#企鹅读书小程序" >>$defaultListFile
-    echo "$QQREAD_CRON sleep \$((RANDOM % 180)) && node /qqread/Task/qqreadnode.js >> /logs/qqreadnode.log 2>&1" >>$defaultListFile
+    echo -n "$QQREAD_CRON sleep \$((RANDOM % 180)) && node /qqread/Task/qqreadnode.js >> /logs/qqreadnode.log 2>&1" >>$defaultListFile
+fi
+
+
+##判断快手极速版COOKIE配置之后才会更新相关任务脚本
+if [ 0"$KS_TOKEN" = "0" ]; then
+    echo "没有配置快手Cookie，相关环境变量参数，跳过下载配置定时任务"
+else
+    echo "配置了KS_TOKEN所以使用 @sunert 仓库的脚本执行任务"
+
+    if [ ! -d "/kuaishou/" ]; then
+        echo "未检查到kuaishou脚本相关文件，初始化下载相关脚本"
+        initkuaishou
+    else
+        echo "更新kuaishou脚本相关文件"
+        git -C /kuaishou reset --hard
+        git -C /kuaishou pull origin master
+    fi
+
+    if [ 0"$KUAISHOU_CRON" = "0" ]; then
+        KUAISHOU_CRON="10 9 * * *"
+    fi
+    echo -e >>$defaultListFile
+    echo "$KUAISHOU_CRON sleep \$((RANDOM % 120)); node /kuaishou/Task/kuaishou.js >> /logs/kuaishou.log 2>&1" >>$defaultListFile
 fi
 
 ##判断汽车之家极速版相关变量存在，才会更新相关任务脚本
@@ -185,7 +236,7 @@ else
     else
         echo "更新qczjspeed脚本相关文件"
         git -C /QCZJSPEED reset --hard
-        git -C /QCZJSPEED pull origin main --rebase
+        git -C /QCZJSPEED pull origin main
         npm install --prefix /QCZJSPEED
     fi
     echo "Replace some qczj scripts content to be compatible with env configuration ..."
@@ -196,14 +247,16 @@ else
     sed -i "s/= addCoinbodyArr\[i]/= addCoinbodyArr\[i].trim()/g" /QCZJSPEED/Task/qczjspeed.js
     sed -i "s/= addCoin2bodyArr\[i]/= addCoin2bodyArr\[i].trim()/g" /QCZJSPEED/Task/qczjspeed.js
 
-    sed -i "s/CASH = \'\'/CASH = \'\', CASHTYPE=\'\'/g" /QCZJSPEED/Task/qczjspeed.js
+    sed -i "s/>= 20/>= 10/g" /QCZJSPEED/Task/qczjspeed.js
     sed -i "s/CASH = process.env.QCZJ_CASH || 0;/CASH = process.env.QCZJ_CASH || 0;\n CASHTYPE = process.env.QCZJ_CASHTYPE || 3;/g" /QCZJSPEED/Task/qczjspeed.js
     sed -i "s/cashtype=3/cashtype=\${CASHTYPE}/g" /QCZJSPEED/Task/qczjspeed.js
+
     if [ 0"$QCZJ_CRON" = "0" ]; then
         QCZJ_CRON="*/20 */1 * * *"
     fi
+    echo -e >>$defaultListFile
     echo "#汽车之家极速版" >>$defaultListFile
-    echo "$QCZJ_CRON node /QCZJSPEED/Task/qczjspeed.js >> /logs/qczjspeed.log 2>&1" >>$defaultListFile
+    echo -n "$QCZJ_CRON node /QCZJSPEED/Task/qczjspeed.js >> /logs/qczjspeed.log 2>&1" >>$defaultListFile
 fi
 
 ##判断火山小视频相关变量存在，才会更新相关任务脚本
@@ -216,76 +269,86 @@ else
     else
         echo "更新hotsoon脚本相关文件"
         git -C /hotsoon reset --hard
-        git -C /hotsoon pull origin master --rebase
+        git -C /hotsoon pull origin master
         mv /hotsoon/package1.json /hotsoon/package.json
         npm install --prefix /hotsoon
     fi
     if [ 0"$HOTSOON_CRON" = "0" ]; then
         HOTSOON_CRON="*/5 1-23/1 * * *"
     fi
+    echo -e >>$defaultListFile
     echo "#火山小视频极速版" >>$defaultListFile
-    echo "$HOTSOON_CRON node /hotsoon/hotsoon.js >> /logs/hotsoon.log 2>&1" >>$defaultListFile
+    echo -n "$HOTSOON_CRON node /hotsoon/hotsoon.js >> /logs/hotsoon.log 2>&1" >>$defaultListFile
 fi
 
-##判断笑谱相关变量存在，才会更新相关任务脚本
-if [ 0"$XP_iboxpayHEADER" = "0" ]; then
-    echo "没有配置笑谱，相关环境变量参数，跳过配置定时任务"
+##判断笑谱视频相关变量存在，才会更新相关任务脚本
+if [ 0"$VIDEOHEADER" = "0" ]; then
+    echo "没有配置笑谱视频，相关环境变量参数，跳过配置定时任务"
 else
+    if [ ! -d "/xp/" ]; then
+        echo "未检查到xp脚本相关文件，初始化下载相关脚本"
+        initxp
+    else
+        echo "更新xp脚本相关文件"
+        git -C /xp reset --hard
+        git -C /xp pull origin master
+        npm install --prefix /xp
+    fi
     if [ 0"$XP_CRON" = "0" ]; then
-        XP_CRON="*/10 */1 * * *"
+        XP_CRON="*/5 * * * *"
     fi
-    echo "#笑谱" >>$defaultListFile
-    echo "$XP_CRON node /ZIYE_JavaScript/Task/iboxpay.js >> /logs/iboxpay.log 2>&1" >>$defaultListFile
+    echo -e >>$defaultListFile
+    echo "#笑谱视频极速版" >>$defaultListFile
+    echo -n "$XP_CRON node /xp/xp.js >> /logs/xp.log 2>&1" >>$defaultListFile
 fi
 
-##判断返利网相关变量存在，才会更新相关任务脚本
-if [ 0"$FL_flwHEADER" = "0" ]; then
-    echo "没有配置返利网，相关环境变量参数，跳过配置定时任务"
-else
-    if [ 0"$FL_CRON" = "0" ]; then
-        FL_CRON="0 12,23 * * *"
-    fi
-    echo "#返利网" >>$defaultListFile
-    echo "$FL_CRON node /ZIYE_JavaScript/Task/flw.js >> /logs/flw.log 2>&1" >>$defaultListFile
-fi
 
 ##判断步步宝相关变量存在，才会配置定时任务
 if [ 0"$BBB_COOKIE" = "0" ]; then
-    echo "没有配置步步宝Cookie，相关环境变量参数，跳过配置定时任务"
+    echo "没有配置步步宝，相关环境变量参数，跳过配置定时任务"
 else
-    cp /adwktt/BBB.js /adwktt/BBB_BACKUP.js
-    sed -i "s/let CookieVal = \$.getdata('bbb_ck')/let CookieVal = process.env.BBB_COOKIE.split();/g" /adwktt/BBB.js
-    if [ 0"$BBB_CRON" = "0" ]; then
-        BBB_CRON="0 8-23/2 * * *"
+    if [ ! -d "/BBB/" ]; then
+        echo "未检查到BBB脚本相关文件，初始化下载相关脚本"
+        initBBB
+    else
+        echo "更新BBB脚本相关文件"
+        git -C /BBB reset --hard
+        git -C /BBB pull origin master
+        npm install --prefix /BBB
+        cp /BBB/BBB.js /BBB/BBB_BACKUP.js
+        sed -i "s/let CookieVal = \$.getdata('bbb_ck')/let CookieVal = process.env.BBB_COOKIE.split();/g" /BBB/BBB.js
     fi
+    if [ 0"$BBB_CRON" = "0" ]; then
+        BBB_CRON="0 7-23/2 * * *"
+    fi
+    echo -e >>$defaultListFile
     echo "#步步宝" >>$defaultListFile
-    echo "$BBB_CRON node /adwktt/BBB.js >> /logs/BBB.log 2>&1" >>$defaultListFile
+    echo -n "$BBB_CRON node /BBB/BBB.js >> /logs/BBB.log 2>&1" >>$defaultListFile
 fi
 
 if [ 0"$BBB_COOKIE2" = "0" ]; then
     echo "没有配置步步宝Cookie2，相关环境变量参数，跳过配置定时任务"
 else
-    cp /adwktt/BBB_BACKUP.js /adwktt/BBB2.js
-    sed -i "s/let CookieVal = \$.getdata('bbb_ck')/let CookieVal = process.env.BBB_COOKIE2.split();/g" /adwktt/BBB2.js
+    cp /BBB/BBB_BACKUP.js /BBB/BBB2.js
+    sed -i "s/let CookieVal = \$.getdata('bbb_ck')/let CookieVal = process.env.BBB_COOKIE2.split();/g" /BBB/BBB2.js
     if [ 0"$BBB_CRON" = "0" ]; then
         BBB_CRON="0 8-23/2 * * *"
     fi
     echo "#步步宝2" >>$defaultListFile
-    echo "$BBB_CRON node /adwktt/BBB2.js >> /logs/BBB2.log 2>&1" >>$defaultListFile
+    echo "$BBB_CRON node /BBB/BBB2.js >> /logs/BBB2.log 2>&1" >>$defaultListFile
 fi
 
 if [ 0"$BBB_COOKIE3" = "0" ]; then
     echo "没有配置步步宝Cookie3，相关环境变量参数，跳过配置定时任务"
 else
-    cp /adwktt/BBB_BACKUP.js /adwktt/BBB3.js
-    sed -i "s/let CookieVal = \$.getdata('bbb_ck')/let CookieVal = process.env.BBB_COOKIE3.split();/g" /adwktt/BBB3.js
+    cp /BBB/BBB_BACKUP.js /BBB/BBB3.js
+    sed -i "s/let CookieVal = \$.getdata('bbb_ck')/let CookieVal = process.env.BBB_COOKIE3.split();/g" /BBB/BBB3.js
     if [ 0"$BBB_CRON" = "0" ]; then
         BBB_CRON="0 8-23/2 * * *"
     fi
     echo "#步步宝3" >>$defaultListFile
-    echo "$BBB_CRON node /adwktt/BBB3.js >> /logs/BBB3.log 2>&1" >>$defaultListFile
+    echo "$BBB_CRON node /BBB/BBB3.js >> /logs/BBB3.log 2>&1" >>$defaultListFile
 fi
-
 
 ##增加自定义shell脚本
 if [ 0"$CUSTOM_SHELL_FILE" = "0" ]; then
@@ -355,6 +418,7 @@ if [ $(grep -c "default_task.sh" $mergedListFile) -eq '0' ]; then
     echo "Merged crontab task file，the required default task is not included, append default task..."
     echo "合并后的定时任务文件，未包含必须的默认定时任务，增加默认定时任务..."
     echo -e >>$mergedListFile
+    echo "" >>$mergedListFile
     echo "#默认定时任务" >>$mergedListFile
     echo "52 */1 * * * sh /pss/default_task.sh |ts >> /logs/default_task.log 2>&1" >>$mergedListFile
 fi
