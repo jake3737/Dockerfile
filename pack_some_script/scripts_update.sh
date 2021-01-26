@@ -51,7 +51,7 @@ function initRead() {
     npm install
 }
 
-#sunert 仓库的百度极速版
+#百度极速版
 function initBaidu() {
     mkdir /baidu_speed
     cd /baidu_speed
