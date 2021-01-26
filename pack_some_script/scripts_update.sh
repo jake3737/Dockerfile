@@ -51,17 +51,18 @@ function initRead() {
     npm install
 }
 
-#百度极速版
+#sunert 仓库的百度极速版
 function initBaidu() {
     mkdir /baidu_speed
     cd /baidu_speed
     git init
-    git remote add -f origin https://github.com/jake3737/script.git
+    git remote add -f origin https://github.com/Sunert/Scripts.git
     git config core.sparsecheckout true
-    echo package.json >>/baidu_speed/.git/info/sparse-checkout
-    echo baidu_speed.js >>/baidu_speed/.git/info/sparse-checkout
-    echo sendNotify.js >>/baidu_speed/.git/info/sparse-checkout
-    git pull origin master  
+    echo Task/package.json >>/baidu_speed/.git/info/sparse-checkout
+    echo Task/baidu_speed.js >>/baidu_speed/.git/info/sparse-checkout
+    echo Task/sendNotify.js >>/baidu_speed/.git/info/sparse-checkout
+    git pull origin master
+    cd Task
     npm install
 }
 
@@ -229,15 +230,15 @@ else
         git -C /baidu_speed reset --hard
         git -C /baidu_speed pull origin master
     fi
-    cp -r /baidu_speed/baidu_speed.js /baidu_speed/baidu_speed_use.js
-    sed -i "s/StartBody/BDCookie/g" /baidu_speed/baidu_speed_use.js
-    sed -i "s/.*process.env.BAIDU_COOKIE.indexOf('\\\n')/else&/g" /baidu_speed/baidu_speed_use.js
+    cp -r /baidu_speed/Task/baidu_speed.js /baidu_speed/Task/baidu_speed_use.js
+    sed -i "s/StartBody/BDCookie/g" /baidu_speed/Task/baidu_speed_use.js
+    sed -i "s/.*process.env.BAIDU_COOKIE.indexOf('\\\n')/else&/g" /baidu_speed/Task/baidu_speed_use.js
 
     if [ 0"$BAIDU_CRON" = "0" ]; then
         BAIDU_CRON="10 7-22 * * *"
     fi
     echo -e >>$defaultListFile
-    echo "$BAIDU_CRON sleep \$((RANDOM % 150)); node /baidu_speed/baidu_speed_use.js >> /logs/baidu_speed.log 2>&1" >>$defaultListFile
+    echo "$BAIDU_CRON sleep \$((RANDOM % 120)); node /baidu_speed/Task/baidu_speed_use.js >> /logs/baidu_speed.log 2>&1" >>$defaultListFile
 fi
 
 ##判断快手极速版COOKIE配置之后才会更新相关任务脚本
@@ -259,7 +260,7 @@ else
         KUAISHOU_CRON="10 9 * * *"
     fi
     echo -e >>$defaultListFile
-    echo "$KUAISHOU_CRON sleep \$((RANDOM % 180)); node /kuaishou/Task/kuaishou.js >> /logs/kuaishou.log 2>&1" >>$defaultListFile
+    echo "$KUAISHOU_CRON sleep \$((RANDOM % 120)); node /kuaishou/Task/kuaishou.js >> /logs/kuaishou.log 2>&1" >>$defaultListFile
 fi
 
 ##判断汽车之家极速版相关变量存在，才会更新相关任务脚本
