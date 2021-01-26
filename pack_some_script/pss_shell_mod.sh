@@ -29,7 +29,7 @@ else
         git -C /baidu_speed pull origin master --rebase
         npm install --prefix /baidu_speed
     fi
-    wget -O /baidu_speed/Task/baidu_speed.js https://raw.githubusercontent.com/Aaron-lv/JavaScript/master/Task/baidu_speed.js
+    wget -O /baidu_speed/Task/baidu_speed.js https://raw.githubusercontent.com/jake3737/Sunert-Scripts/master/Task/baidu_speed.js
     sed -i "s/StartBody/BDCookie/g" /baidu_speed/Task/baidu_speed.js
     sed -i "s/.*process.env.BAIDU_COOKIE.indexOf('\\\n')/else&/g" /baidu_speed/Task/baidu_speed.js
     if [ 0"$BAIDU_CRON" = "0" ]; then
