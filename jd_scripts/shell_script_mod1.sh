@@ -31,6 +31,7 @@ wget -O /scripts/jx_cfdtx.js https://raw.githubusercontent.com/Aaron-lv/JavaScri
 echo -e >> /scripts/docker/merged_list_file.sh
 echo "#京喜财富岛提现" >> /scripts/docker/merged_list_file.sh
 echo "59 23 * * * sleep 58 && node /scripts/jx_cfdtx.js |ts >> /scripts/logs/jx_cfdtx.log 2>&1" >> /scripts/docker/merged_list_file.sh
+echo "59,58 18 * * * sleep 39 && node /scripts/jd_blueCoin.js >> /scripts/logs/jd_blueCoin.log 2>&1" >> /scripts/docker/merged_list_file.sh
 
 
 
