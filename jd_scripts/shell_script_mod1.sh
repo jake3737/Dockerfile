@@ -4,12 +4,12 @@
 ## 克隆shylocks仓库脚本
 if [ ! -d "/shylocks/" ]; then
     echo "未检查到shylocks仓库脚本，初始化下载相关脚本"
-    #git clone https://github.com/shylocks/Loon /shylocks
+    git clone https://github.com/shylocks/Loon /shylocks
 else
-    #echo "更新shylocks脚本相关文件"
-    #git -C /shylocks reset --hard
-    #git -C /shylocks pull origin main
-    #cp -R /shylocks/jd*.js /scripts/
+    echo "更新shylocks脚本相关文件"
+    git -C /shylocks reset --hard
+    git -C /shylocks pull origin main
+    cp -R /shylocks/jd*.js /scripts/
 fi
 
 ## 红包雨
@@ -35,7 +35,7 @@ echo "59 23 * * * sleep 58 && node /scripts/jx_cfdtx.js |ts >> /scripts/logs/jx_
 wget -O /scripts/jd_blueCoin.js https://github.com/jake3737/zyjd/blob/master/jd_blueCoin.js
 echo -e >> /scripts/docker/merged_list_file.sh
 echo "#兑换礼品" >> /scripts/docker/merged_list_file.sh
-echo "59,58 19 * * * sleep 19 && node /scripts/jd_blueCoin.js >> /scripts/logs/jd_blueCoin.log 2>&1" >> /scripts/docker/merged_list_file.sh
+echo "59,58 23 * * * sleep 23 && node /scripts/jd_blueCoin.js >> /scripts/logs/jd_blueCoin.log 2>&1" >> /scripts/docker/merged_list_file.sh
 
 
 
