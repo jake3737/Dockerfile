@@ -116,7 +116,7 @@ function initxp() {
     mkdir /xp
     cd /xp
     git init
-    git remote add -f origin https://github.com/jake3737/script
+    git remote add -f origin https://github.com/ZhiYi-N/script
     git config core.sparsecheckout true
     echo package.json >>/xp/.git/info/sparse-checkout
     echo xp.js >>/xp/.git/info/sparse-checkout
