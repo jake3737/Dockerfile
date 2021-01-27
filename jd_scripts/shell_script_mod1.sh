@@ -4,12 +4,12 @@
 ## 克隆shylocks仓库脚本
 if [ ! -d "/shylocks/" ]; then
     echo "未检查到shylocks仓库脚本，初始化下载相关脚本"
-    git clone https://github.com/shylocks/Loon /shylocks
+    #git clone https://github.com/shylocks/Loon /shylocks
 else
-    echo "更新shylocks脚本相关文件"
-    git -C /shylocks reset --hard
-    git -C /shylocks pull origin main
-    cp -R /shylocks/jd*.js /scripts/
+    #echo "更新shylocks脚本相关文件"
+    #git -C /shylocks reset --hard
+    #git -C /shylocks pull origin main
+    #cp -R /shylocks/jd*.js /scripts/
 fi
 
 ## 红包雨
