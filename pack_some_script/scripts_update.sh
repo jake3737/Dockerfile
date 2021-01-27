@@ -422,6 +422,18 @@ else
     echo "$BBB_CRON node /BBB/BBB3.js >> /logs/BBB3.log 2>&1" >>$defaultListFile
 fi
 
+if [ 0"$BBB_COOKIE4" = "0" ]; then
+    echo "没有配置步步宝Cookie4，相关环境变量参数，跳过配置定时任务"
+else
+    cp /BBB/BBB_BACKUP.js /BBB/BBB4.js
+    sed -i "s/let CookieVal = \$.getdata('bbb_ck')/let CookieVal = process.env.BBB_COOKIE4.split();/g" /BBB/BBB4.js
+    if [ 0"$BBB_CRON" = "0" ]; then
+        BBB_CRON="0 8-23/2 * * *"
+    fi
+    echo "#步步宝3" >>$defaultListFile
+    echo "$BBB_CRON node /BBB/BBB4.js >> /logs/BBB4.log 2>&1" >>$defaultListFile
+fi
+
 ##增加自定义shell脚本
 if [ 0"$CUSTOM_SHELL_FILE" = "0" ]; then
     echo "未配置自定shell脚本文件，跳过执行。"
