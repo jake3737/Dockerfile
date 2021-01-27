@@ -139,6 +139,25 @@ function initBBB() {
     npm install
 }
 
+##克隆ZIYE_JavaScript仓库
+if [ ! -d "/ZIYE_JavaScript/" ]; then
+    echo "未检查到ZIYE_JavaScript仓库脚本，初始化下载相关脚本"
+    mkdir /ZIYE_JavaScript
+    cd /ZIYE_JavaScript
+    git init
+    git remote add -f origin https://github.com/ziye12/JavaScript
+    git config core.sparsecheckout true
+    echo package.json >>/ZIYE_JavaScript/.git/info/sparse-checkout
+    echo Task >>/ZIYE_JavaScript/.git/info/sparse-checkout
+    git pull origin main --rebase
+    npm install
+else
+    echo "更新ZIYE_JavaScript脚本相关文件"
+    git -C /ZIYE_JavaScript reset --hard
+    git -C /ZIYE_JavaScript pull origin main --rebase
+    npm install --prefix /ZIYE_JavaScript
+fi
+
 ##判断小米运动相关变量存在，才会更新相关任务脚本
 if [ 0"$XM_TOKEN" = "0" ]; then
     echo "没有配置小米运动，相关环境变量参数，跳过配置定时任务"
@@ -232,13 +251,19 @@ else
     fi
     cp -r /baidu_speed/Task/baidu_speed.js /baidu_speed/Task/baidu_speed_use.js
     sed -i "s/StartBody/BDCookie/g" /baidu_speed/Task/baidu_speed_use.js
-    sed -i "s/.*process.env.BAIDU_COOKIE.indexOf('\\\n')/else&/g" /baidu_speed/Task/baidu_speed_use.js
+    #直接插入提现，
+    sed -i "/await\ userInfo/i\\      if (\$.time(\"HH\") == \"06\") { await withDraw(withcash); } ;" /baidu_speed/Task/baidu_speed_use.js
+    #sed -i "s/.*process.env.BAIDU_COOKIE.indexOf('\\\n')/else&/g" /baidu_speed/Task/baidu_speed_use.js
 
     if [ 0"$BAIDU_CRON" = "0" ]; then
         BAIDU_CRON="10 7-22 * * *"
     fi
     echo -e >>$defaultListFile
     echo "$BAIDU_CRON sleep \$((RANDOM % 150)); node /baidu_speed/Task/baidu_speed_use.js >> /logs/baidu_speed.log 2>&1" >>$defaultListFile
+    echo "$BAIDU_CRON sleep \$((RANDOM % 160)); node /baidu_speed1.js >> /logs/baidu_speed1.log 2>&1" >>$defaultListFile
+    echo "$BAIDU_CRON sleep \$((RANDOM % 170)); node /baidu_speed2.js >> /logs/baidu_speed2.log 2>&1" >>$defaultListFile
+    #增加一个不带随机延迟任务是为了6点抢提现使用
+    echo "0 6 * * * node /baidu_speed/Task/baidu_speed_use.js >> /logs/baidu_speed.log 2>&1" >>$defaultListFile
 fi
 
 ##判断快手极速版COOKIE配置之后才会更新相关任务脚本
@@ -339,6 +364,16 @@ else
     echo -n "$XP_CRON node /xp/xp.js >> /logs/xp.log 2>&1" >>$defaultListFile
 fi
 
+##判断笑谱相关变量存在，才会更新相关任务脚本
+if [ 0"$XP_iboxpayHEADER" = "0" ]; then
+    echo "没有配置笑谱，相关环境变量参数，跳过配置定时任务"
+else
+    if [ 0"$XP_CRON" = "0" ]; then
+        XP_CRON="*/5 */1 * * *"
+    fi
+    echo "#笑谱" >>$defaultListFile
+    echo "$XP_CRON node /ZIYE_JavaScript/Task/iboxpay.js >> /logs/iboxpay.log 2>&1" >>$defaultListFile
+fi
 
 ##判断步步宝相关变量存在，才会配置定时任务
 if [ 0"$BBB_COOKIE" = "0" ]; then
@@ -385,6 +420,27 @@ else
     fi
     echo "#步步宝3" >>$defaultListFile
     echo "$BBB_CRON node /BBB/BBB3.js >> /logs/BBB3.log 2>&1" >>$defaultListFile
+fi
+
+##增加自定义shell脚本
+if [ 0"$CUSTOM_SHELL_FILE" = "0" ]; then
+    echo "未配置自定shell脚本文件，跳过执行。"
+else
+    if expr "$CUSTOM_SHELL_FILE" : 'http.*' &>/dev/null; then
+        echo "自定义shell脚本为远程脚本，开始下在自定义远程脚本。"
+        wget -O /pss/pss_shell_mod.sh $CUSTOM_SHELL_FILE
+        echo "下载完成，开始执行..."
+        sh -x /pss/pss_shell_mod.sh
+        echo "自定义远程shell脚本下载并执行结束。"
+    else
+        if [ ! -f $CUSTOM_SHELL_FILE ]; then
+            echo "自定义shell脚本为docker挂载脚本文件，但是指定挂载文件不存在，跳过执行。"
+        else
+            echo "docker挂载的自定shell脚本，开始执行..."
+            sh -x $CUSTOM_SHELL_FILE
+            echo "docker挂载的自定shell脚本，执行结束。"
+        fi
+    fi
 fi
 
 ##追加|ts 任务日志时间戳
