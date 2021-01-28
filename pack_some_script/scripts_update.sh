@@ -368,11 +368,22 @@ fi
 if [ 0"$XP_iboxpayHEADER" = "0" ]; then
     echo "没有配置笑谱，相关环境变量参数，跳过配置定时任务"
 else
-    if [ 0"$XP_CRON" = "0" ]; then
-        XP_CRON="*/5 */1 * * *"
+    if [ 0"$XP_live" = "0" ]; then
+        echo "没有配置笑谱直播，相关环境变量参数，配置笑谱视频定时任务"
+        if [ 0"$XP_CRON" = "0" ]; then
+            XP_CRON="*/10 */1 * * *"
+        fi
+        echo "#笑谱" >>$defaultListFile
+        echo "$XP_CRON node /ZIYE_JavaScript/Task/iboxpay.js >> /logs/iboxpay.log 2>&1" >>$defaultListFile
+    else
+        echo "配置了笑谱直播，相关环境变量参数，配置笑谱直播定时任务"
+        wget -O /ZIYE_JavaScript/Task/iboxpay_zb.js https://raw.githubusercontent.com/Aaron-lv/JavaScript/master/Task/XPZB.js
+        if [ 0"$XPZB_CRON" = "0" ]; then
+            XPZB_CRON="*/10 10-12/1 * * *"
+        fi
+        echo "#笑谱直播" >>$defaultListFile
+        echo "$XPZB_CRON node /ZIYE_JavaScript/Task/iboxpay_zb.js >> /logs/iboxpay_zb.log 2>&1" >>$defaultListFile
     fi
-    echo "#笑谱" >>$defaultListFile
-    echo "$XP_CRON node /ZIYE_JavaScript/Task/iboxpay.js >> /logs/iboxpay.log 2>&1" >>$defaultListFile
 fi
 
 ##判断步步宝相关变量存在，才会配置定时任务
