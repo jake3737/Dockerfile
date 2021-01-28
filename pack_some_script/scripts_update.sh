@@ -208,7 +208,7 @@ else
     fi
     echo -e >>$defaultListFile
     echo "#喜马拉雅极速版">>$defaultListFile
-    echo -n "$XMLY_CRON python3 /xmly_speed/xmly_speed.py >> /logs/xmly_speed.log 2>&1" >>$defaultListFile
+    echo -n "$XMLY_CRON sleep \$((RANDOM % 190)); python3 /xmly_speed/xmly_speed.py >> /logs/xmly_speed.log 2>&1" >>$defaultListFile
 fi
 
 ##判断企鹅读书小程序相关变量存在，才会更新相关任务脚本
