@@ -37,6 +37,15 @@ echo -e >> /scripts/docker/merged_list_file.sh
 echo "#兑换礼品" >> /scripts/docker/merged_list_file.sh
 echo "59,58 23 * * * sleep 23 && node /scripts/jd_blueCoin.js >> /scripts/logs/jd_blueCoin.log 2>&1" >> /scripts/docker/merged_list_file.sh
 
+## 修改默认任务定时
+sed -i "s/52 \*\/1 \* \* \* docker_entrypoint.sh/51 \*\/1 \* \* \* docker_entrypoint.sh/g" /scripts/docker/merged_list_file.sh
+## 修改闪购盲盒定时
+sed -i "s/27 8 \* \* \* node \/scripts\/jd_sgmh.js/27 8,23 \* \* \* node \/scripts\/jd_sgmh.js/g" /scripts/docker/merged_list_file.sh
+sed -i "s/27 8 \* \* \* sleep \$((RANDOM % \$RANDOM_DELAY_MAX)); node \/scripts\/jd_sgmh.js/27 8,23 \* \* \* sleep \$((RANDOM % \$RANDOM_DELAY_MAX)); node \/scripts\/jd_sgmh.js/g" /scripts/docker/merged_list_file.sh
+## 修改签到领现金定时
+sed -i "s/27 7 \* \* \* node \/scripts\/jd_cash.js/27 7,23 \* \* \* node \/scripts\/jd_cash.js/g" /scripts/docker/merged_list_file.sh
+sed -i "s/27 7 \* \* \* sleep \$((RANDOM % \$RANDOM_DELAY_MAX)); node \/scripts\/jd_cash.js/27 7,23 * * * sleep \$((RANDOM % \$RANDOM_DELAY_MAX)); node \/scripts\/jd_cash.js/g" /scripts/docker/merged_list_file.sh
+
 
 
 ## 替换工业品爱消除助力码
