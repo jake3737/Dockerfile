@@ -376,6 +376,7 @@ else
         echo "#笑谱" >>$defaultListFile
         echo "$XP_CRON node /ZIYE_JavaScript/Task/iboxpay.js >> /logs/iboxpay.log 2>&1" >>$defaultListFile
     else
+        sed -i "s/LIVE = process.env.XP_live || 60;/LIVE = process.env.XP_live || 60;\n LIVE = 120;/g" /ZIYE_JavaScript/Task/XPZB.js
         echo "配置了笑谱直播，相关环境变量参数，配置笑谱直播定时任务"
         if [ 0"$XPZB_CRON" = "0" ]; then
             XPZB_CRON="*/10 9-22/3 * * *"
