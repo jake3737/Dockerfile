@@ -3,7 +3,7 @@
 
 if [ ! -d "/shylocks/" ]; then
     echo "未检查到shylocks仓库脚本，初始化下载相关脚本"
-    git clone https://github.com/Tartarus2014/Script /shylocks
+    git clone https://github.com/lmh77/shylocks-Loon
 else
     echo "更新shylocks脚本相关文件"
     git -C /shylocks reset --hard
