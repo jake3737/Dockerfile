@@ -49,7 +49,7 @@ echo "第4步判断是否配置了随即延迟参数..."
 if [ $RANDOM_DELAY_MAX ]; then
     if [ $RANDOM_DELAY_MAX -ge 1 ]; then
         echo "已设置随机延迟为 $RANDOM_DELAY_MAX , 设置延迟任务中..."
-        sed -i "/\(jd_bean_sign.js\|jd_blueCoin.js\|jd_joy_reward.js\|jd_joy_steal.js\|jd_joy_feedPets.js\|jd_car_exchange.js\)/!s/node/sleep \$((RANDOM % \$RANDOM_DELAY_MAX)); node/g" $mergedListFile
+        sed -i "/\(jd_blueCoin.js\|jd_joy_reward.js\|jd_car_exchange.js\)/!s/node/sleep \$((RANDOM % \$RANDOM_DELAY_MAX)); node/g" $mergedListFile
     fi
 else
     echo "未配置随即延迟对应的环境变量，故不设置延迟任务..."
@@ -64,7 +64,7 @@ else
         wget -O /scripts/docker/shell_script_mod.sh $CUSTOM_SHELL_FILE
         echo "下载完成，开始执行..."
         echo "" >>$mergedListFile
-        echo -n "##############远程脚本##############" >>$mergedListFile
+        echo "##############远程脚本##############" >>$mergedListFile
         sh -x /scripts/docker/shell_script_mod.sh
         echo "自定义远程shell脚本下载并执行结束。"
     else
@@ -73,21 +73,30 @@ else
         else
             echo "docker挂载的自定shell脚本，开始执行..."
             echo "" >>$mergedListFile
-            echo -n "##############挂载脚本##############" >>$mergedListFile
+            echo "##############挂载脚本##############" >>$mergedListFile
             sh -x $CUSTOM_SHELL_FILE
             echo "docker挂载的自定shell脚本，执行结束。"
         fi
     fi
 fi
 
-echo "第6步增加 |ts 任务日志输出时间戳..."
+echo "第6步判断是否配置了不运行的脚本..."
+if [ $DO_NOT_RUN_SCRIPTS ]; then
+    echo "您配置了不运行的脚本：$DO_NOT_RUN_SCRIPTS"
+    arr=${DO_NOT_RUN_SCRIPTS//&/ }
+    for item in $arr; do
+        sed -ie "s/^[^\]*${item}.js*/#&/g" $mergedListFile
+    done
+fi
+
+echo "第7步增加 |ts 任务日志输出时间戳..."
 sed -i "/\( ts\| |ts\|| ts\)/!s/>>/\|ts >>/g" $mergedListFile
 
-echo "第7步执行proc_file.sh脚本任务..."
+echo "第8步执行proc_file.sh脚本任务..."
 sh -x /scripts/docker/proc_file.sh
 
-echo "第8步加载最新的定时任务文件..."
+echo "第9步加载最新的定时任务文件..."
 crontab $mergedListFile
 
-echo "第9步将仓库的docker_entrypoint.sh脚本更新至系统/usr/local/bin/docker_entrypoint.sh内..."
+echo "第10步将仓库的docker_entrypoint.sh脚本更新至系统/usr/local/bin/docker_entrypoint.sh内..."
 cat /scripts/docker/docker_entrypoint.sh >/usr/local/bin/docker_entrypoint.sh
