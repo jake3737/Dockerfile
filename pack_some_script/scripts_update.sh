@@ -377,12 +377,11 @@ else
         echo "$XP_CRON node /ZIYE_JavaScript/Task/iboxpay.js >> /logs/iboxpay.log 2>&1" >>$defaultListFile
     else
         echo "配置了笑谱直播，相关环境变量参数，配置笑谱直播定时任务"
-        wget -O /ZIYE_JavaScript/Task/iboxpay_zb.js https://raw.githubusercontent.com/Aaron-lv/JavaScript/master/Task/XPZB.js
         if [ 0"$XPZB_CRON" = "0" ]; then
-            XPZB_CRON="*/10 10-12/1 * * *"
+            XPZB_CRON="*/10 9-22/3 * * *"
         fi
         echo "#笑谱直播" >>$defaultListFile
-        echo "$XPZB_CRON node /ZIYE_JavaScript/Task/iboxpay_zb.js >> /logs/iboxpay_zb.log 2>&1" >>$defaultListFile
+        echo "$XPZB_CRON node /ZIYE_JavaScript/Task/XPZB.js >> /logs/XPZB.log 2>&1" >>$defaultListFile
     fi
 fi
 
