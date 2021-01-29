@@ -1,17 +1,23 @@
 #!/bin/sh
+#@shylocks仓库脚本
+function initShylocks() {
+#     git clone https://github.com/shylocks/Loon.git /shylocks
+    git clone https://github.com/Tartarus2014/Script.git /shylocks
+}
 
-
-if [ ! -d "/shylocks/" ]; then
+ if [ ! -d "/shylocks/" ]; then
     echo "未检查到shylocks仓库脚本，初始化下载相关脚本"
-    git clone https://github.com/lmh77/shylocks-Loon
+    initShylocks
 else
     echo "更新shylocks脚本相关文件"
     git -C /shylocks reset --hard
     git -C /shylocks pull --rebase
+    #npm install --loglevel error
 fi
 
-## 复制shylocks脚本
-cp -rf /shylocks/jd_*.js /scripts
+##复制文件
+cp -f /shylocks/jd*.js /scripts/
+
 
 
 ## 超级直播间红包雨
