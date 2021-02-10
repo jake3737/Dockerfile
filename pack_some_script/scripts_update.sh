@@ -130,7 +130,7 @@ function initBBB() {
     mkdir /BBB
     cd /BBB
     git init
-    git remote add -f origin https://github.com/jake3737/Woolxn
+    git remote add -f origin https://github.com/jake3737/script
     git config core.sparsecheckout true
     echo package.json >>/BBB/.git/info/sparse-checkout
     echo BBB.js >>/BBB/.git/info/sparse-checkout
@@ -138,25 +138,6 @@ function initBBB() {
     git pull origin master
     npm install
 }
-
-##克隆ZIYE_JavaScript仓库
-if [ ! -d "/ZIYE_JavaScript/" ]; then
-    echo "未检查到ZIYE_JavaScript仓库脚本，初始化下载相关脚本"
-    mkdir /ZIYE_JavaScript
-    cd /ZIYE_JavaScript
-    git init
-    git remote add -f origin https://github.com/ziye12/JavaScript
-    git config core.sparsecheckout true
-    echo package.json >>/ZIYE_JavaScript/.git/info/sparse-checkout
-    echo Task >>/ZIYE_JavaScript/.git/info/sparse-checkout
-    git pull origin main --rebase
-    npm install
-else
-    echo "更新ZIYE_JavaScript脚本相关文件"
-    git -C /ZIYE_JavaScript reset --hard
-    git -C /ZIYE_JavaScript pull origin main --rebase
-    npm install --prefix /ZIYE_JavaScript
-fi
 
 ##判断小米运动相关变量存在，才会更新相关任务脚本
 if [ 0"$XM_TOKEN" = "0" ]; then
